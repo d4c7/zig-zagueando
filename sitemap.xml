@@ -2,21 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://example.org/posts/10-zig-intro/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</loc>
     <lastmod>2023-05-11T23:59:59+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/posts/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/posts/</loc>
     <lastmod>2023-05-11T23:59:59+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/</loc>
     <lastmod>2023-05-11T23:59:59+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/categories/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/categories/</loc>
   </url><url>
-    <loc>http://example.org/search-es/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/search-es/</loc>
   </url><url>
-    <loc>http://example.org/search/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/search/</loc>
   </url><url>
-    <loc>http://example.org/tags/</loc>
+    <loc>https://d4c7.github.io/zig-zagging/tags/</loc>
   </url>
 </urlset>
