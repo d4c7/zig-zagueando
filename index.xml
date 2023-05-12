@@ -6,7 +6,7 @@
     <description>Recent content on Zig-zagging Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 May 2023 23:59:59 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagging/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 12 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagging/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Friendly Intro to Zig</title>
       <link>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</link>
@@ -15,6 +15,16 @@
       <guid>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</guid>
       <description>Hey there, fellow programmers! Are you ready to embark on a new coding journey? If you&amp;rsquo;re tired of the same old programming languages and want to try something fun and exciting, join me as I explore the fascinating world of Zig. 🚀
 What is Zig, you ask? 🤔 Zig is a modern, general-purpose programming language that&amp;rsquo;s designed for robustness, optimal performance, and simplicity. It&amp;rsquo;s built to tackle common programming pain points, like memory safety and resource management, with a fresh and user-friendly approach.</description>
+    </item>
+    
+    <item>
+      <title>Zig Across Platforms: Installing Zig on Linux, Windows, and macOS 🌍</title>
+      <link>https://d4c7.github.io/zig-zagging/posts/20-zig-install/</link>
+      <pubDate>Fri, 12 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://d4c7.github.io/zig-zagging/posts/20-zig-install/</guid>
+      <description>Hey there, Zig enthusiasts! 👋 In our previous posts, we&amp;rsquo;ve covered various aspects of the Zig programming language. But before we can dive into more advanced topics, let&amp;rsquo;s make sure everyone has Zig up and running on their systems. In this post, we&amp;rsquo;ll guide you through installing Zig on Linux, Windows, and macOS. Let&amp;rsquo;s get started! 🚀
+⚠️ Take heed, dear reader! This blog has been crafted using Zig version 0.</description>
     </item>
     
     
