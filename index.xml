@@ -6,7 +6,7 @@
     <description>Recent content on Zig-zagging Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 12 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagging/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagging/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Friendly Intro to Zig</title>
       <link>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</link>
@@ -24,6 +24,16 @@ What is Zig, you ask? 🤔 Zig is a modern, general-purpose programming language
       
       <guid>https://d4c7.github.io/zig-zagging/posts/20-zig-install/</guid>
       <description>Hey there, Zig enthusiasts! 👋 In our previous posts, we&amp;rsquo;ve covered various aspects of the Zig programming language. But before we can dive into more advanced topics, let&amp;rsquo;s make sure everyone has Zig up and running on their systems. In this post, we&amp;rsquo;ll guide you through installing Zig on Linux, Windows, and macOS. Let&amp;rsquo;s get started! 🚀
+⚠️ Take heed, dear reader! This blog has been crafted using Zig version 0.</description>
+    </item>
+    
+    <item>
+      <title>Visual Zig Studio: Setting Up Visual Studio Code for Zig Development 🎨</title>
+      <link>https://d4c7.github.io/zig-zagging/posts/25-zig-visual-studio-code-dev/</link>
+      <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://d4c7.github.io/zig-zagging/posts/25-zig-visual-studio-code-dev/</guid>
+      <description>Greetings, Zig enthusiasts! 👋 In our previous posts, we&amp;rsquo;ve explored various aspects of the Zig programming language. Now, it&amp;rsquo;s time to set up a comfortable development environment to enhance your Zig coding experience. In this post, we&amp;rsquo;ll guide you through configuring Visual Studio Code (VS Code) for Zig development, including code editing, running, and debugging. Let&amp;rsquo;s dive in! 🚀
 ⚠️ Take heed, dear reader! This blog has been crafted using Zig version 0.</description>
     </item>
     
