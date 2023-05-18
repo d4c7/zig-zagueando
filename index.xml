@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Zig-zagging Blog</title>
-    <link>https://d4c7.github.io/zig-zagging/</link>
-    <description>Recent content on Zig-zagging Blog</description>
+    <title>Zig-zagueando Blog</title>
+    <link>https://d4c7.github.io/Zig-zagueando/</link>
+    <description>Recent content on Zig-zagueando Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagging/index.xml" rel="self" type="application/rss+xml" />
+    <language>es-es</language>
+    <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/Zig-zagueando/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Friendly Intro to Zig</title>
-      <link>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</link>
+      <title>Zig: Un lenguaje de programación simple y potente 🚀</title>
+      <link>https://d4c7.github.io/Zig-zagueando/posts/zig-un-lenguaje-de-programaci%C3%B3n-simple-y-potente/</link>
       <pubDate>Thu, 11 May 2023 23:59:59 +0000</pubDate>
       
-      <guid>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</guid>
-      <description>Hey there, fellow programmers! Are you ready to embark on a new coding journey? If you&amp;rsquo;re tired of the same old programming languages and want to try something fun and exciting, join me as I explore the fascinating world of Zig. 🚀
-What is Zig, you ask? 🤔 Zig is a modern, general-purpose programming language that&amp;rsquo;s designed for robustness, optimal performance, and simplicity. It&amp;rsquo;s built to tackle common programming pain points, like memory safety and resource management, with a fresh and user-friendly approach.</description>
+      <guid>https://d4c7.github.io/Zig-zagueando/posts/zig-un-lenguaje-de-programaci%C3%B3n-simple-y-potente/</guid>
+      <description>¡Bienvenido al emocionante mundo de Zig! 🚀 Si estás buscando un lenguaje de programación que combine eficiencia, seguridad y un enfoque en el rendimiento, ¡has llegado al lugar correcto!
+¿Por qué Zig? 🎯 Una de las primeras cosas que notarás al explorar Zig es su enfoque en la seguridad y la prevención de errores. El compilador de Zig es estricto y te ayudará a detectar problemas en tiempo de compilación antes de que se conviertan en pesadillas en tiempo de ejecución.</description>
     </item>
     
     <item>
-      <title>Zig Across Platforms: Installing Zig on Linux, Windows, and macOS 🌍</title>
-      <link>https://d4c7.github.io/zig-zagging/posts/20-zig-install/</link>
+      <title>Instalando Zig en Linux, Windows y macOS 🌍</title>
+      <link>https://d4c7.github.io/Zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/</link>
       <pubDate>Fri, 12 May 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://d4c7.github.io/zig-zagging/posts/20-zig-install/</guid>
-      <description>Hey there, Zig enthusiasts! 👋 In our previous posts, we&amp;rsquo;ve covered various aspects of the Zig programming language. But before we can dive into more advanced topics, let&amp;rsquo;s make sure everyone has Zig up and running on their systems. In this post, we&amp;rsquo;ll guide you through installing Zig on Linux, Windows, and macOS. Let&amp;rsquo;s get started! 🚀
-⚠️ Take heed, dear reader! This blog has been crafted using Zig version 0.</description>
+      <guid>https://d4c7.github.io/Zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/</guid>
+      <description>¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀
+⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig.</description>
     </item>
     
     <item>
-      <title>Visual Zig Studio: Setting Up Visual Studio Code for Zig Development 🎨</title>
-      <link>https://d4c7.github.io/zig-zagging/posts/25-zig-visual-studio-code-dev/</link>
+      <title>Configura Visual Studio Code para programar en Zig 🎨</title>
+      <link>https://d4c7.github.io/Zig-zagueando/posts/configura-visual-studio-code-para-programar-en-zig/</link>
       <pubDate>Sat, 13 May 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://d4c7.github.io/zig-zagging/posts/25-zig-visual-studio-code-dev/</guid>
-      <description>Greetings, Zig enthusiasts! 👋 In our previous posts, we&amp;rsquo;ve explored various aspects of the Zig programming language. Now, it&amp;rsquo;s time to set up a comfortable development environment to enhance your Zig coding experience. In this post, we&amp;rsquo;ll guide you through configuring Visual Studio Code (VS Code) for Zig development, including code editing, running, and debugging. Let&amp;rsquo;s dive in! 🚀
-⚠️ Take heed, dear reader! This blog has been crafted using Zig version 0.</description>
+      <guid>https://d4c7.github.io/Zig-zagueando/posts/configura-visual-studio-code-para-programar-en-zig/</guid>
+      <description>¡Saludos, entusiastas de Zig! 👋 Es el momento de configurar un entorno de desarrollo cómodo para mejorar tu experiencia de programación en Zig. En esta publicación, te guiaré para configurar Visual Studio Code (VS Code) para el desarrollo en Zig, incluyendo edición de código, ejecución y depuración. ¡Sumérgete en el tema! 🚀
+⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig.</description>
     </item>
-    
     
     
   </channel>

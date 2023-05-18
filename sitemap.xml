@@ -2,27 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://d4c7.github.io/zig-zagging/posts/10-zig-intro/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/posts/zig-un-lenguaje-de-programaci%C3%B3n-simple-y-potente/</loc>
     <lastmod>2023-05-11T23:59:59+00:00</lastmod>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/posts/20-zig-install/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/</loc>
     <lastmod>2023-05-12T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/posts/25-zig-visual-studio-code-dev/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/posts/configura-visual-studio-code-para-programar-en-zig/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/posts/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/posts/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/</loc>
     <lastmod>2023-05-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/categories/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/search/</loc>
+    <priority>0.1</priority>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/search-es/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/categories/</loc>
   </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/search/</loc>
-  </url><url>
-    <loc>https://d4c7.github.io/zig-zagging/tags/</loc>
+    <loc>https://d4c7.github.io/Zig-zagueando/tags/</loc>
   </url>
 </urlset>

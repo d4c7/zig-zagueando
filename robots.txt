@@ -1,3 +1,3 @@
 User-agent: *
 Disallow:
-Sitemap: https://d4c7.github.io/zig-zagging/sitemap.xml
+Sitemap: https://d4c7.github.io/Zig-zagueando/sitemap.xml
