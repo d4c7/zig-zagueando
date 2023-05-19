@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Zig-zagueando Blog</title>
     <link>https://d4c7.github.io/zig-zagueando/categories/</link>
-    <description>Recent content in Categories on Zig-zagueando Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Contenido reciente de Zig-zagueando Blog</description>
+    <generator>Zig-Zagueando</generator>
     <language>es-es</language><atom:link href="https://d4c7.github.io/zig-zagueando/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

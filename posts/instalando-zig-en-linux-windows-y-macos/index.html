@@ -8,12 +8,13 @@
 <title>Instalando Zig en Linux, Windows y macOS 🌍 | Zig-zagueando Blog</title>
 <meta name="keywords" content="Zig, Programación Zig, Instalación de Zig, Zig en Linux, Zig en Windows, Zig en macOS, Paquetes precompilados de Zig, Construir Zig desde el código fuente, Instalación de Zig con Snap, Administrador de paquetes Scoop, Homebrew para Zig, MacPorts para Zig, Configurar Zig, Lenguaje de programación eficiente, Lenguaje de programación moderno, Aprender Zig, Guía de instalación de Zig, Instalar Zig en sistemas operativos, Instrucciones de instalación de Zig">
 <meta name="description" content="¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀
-⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig.">
+⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig
+Instalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.">
 <meta name="author" content="d4c7">
 <link rel="canonical" href="https://d4c7.github.io/zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/">
-<link crossorigin="anonymous" href="/zig-zagueando/assets/css/stylesheet.3613efbd0b1772781e8f49935e973cae632a7f61471c05b17be155505ccf87b5.css" integrity="sha256-NhPvvQsXcngej0mTXpc8rmMqf2FHHAWxe&#43;FVUFzPh7U=" rel="preload stylesheet" as="style">
-<script defer crossorigin="anonymous" src="/zig-zagueando/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
-    onload="hljs.initHighlightingOnLoad();"></script>
+<link crossorigin="anonymous" href="/zig-zagueando/assets/css/stylesheet.8c0a2ddd1fb9d4318543d7189fe97db02a5ed3423aa8edcc23a38419cac91e72.css" integrity="sha256-jAot3R&#43;51DGFQ9cYn&#43;l9sCpe00I6qO3MI6OEGcrJHnI=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zig-zagueando/assets/js/highlight.7dd4ca575eb78a18f192a810d67817d40651d081ba3084649b08ec02fc265fb9.js" integrity="sha256-fdTKV163ihjxkqgQ1ngX1AZR0IG6MIRkmwjsAvwmX7k="
+    onload="hljs.configure({ignoreUnescapedHTML:true});hljs.highlightAll();"></script>
 <link rel="icon" href="https://d4c7.github.io/zig-zagueando/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://d4c7.github.io/zig-zagueando/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://d4c7.github.io/zig-zagueando/favicon-32x32.png">
@@ -29,7 +30,15 @@
         }
 
     </style>
-</noscript>
+</noscript><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300&family=Pragati+Narrow&family=Source+Sans+Pro:wght@300&family=Tajawal:wght@300&family=VT323&display=swap" rel="stylesheet">
+
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-59LR4NE7W9"></script>
 <script>
 var doNotTrack = false;
@@ -42,7 +51,8 @@ if (!doNotTrack) {
 </script>
 <meta property="og:title" content="Instalando Zig en Linux, Windows y macOS 🌍" />
 <meta property="og:description" content="¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀
-⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig." />
+⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig
+Instalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://d4c7.github.io/zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2023-05-12T00:00:00+00:00" />
@@ -51,7 +61,8 @@ if (!doNotTrack) {
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Instalando Zig en Linux, Windows y macOS 🌍"/>
 <meta name="twitter:description" content="¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀
-⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig."/>
+⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig
+Instalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente."/>
 
 
 <script type="application/ld+json">
@@ -80,12 +91,12 @@ if (!doNotTrack) {
   "@type": "BlogPosting",
   "headline": "Instalando Zig en Linux, Windows y macOS 🌍",
   "name": "Instalando Zig en Linux, Windows y macOS 🌍",
-  "description": "¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀\n⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig.",
+  "description": "¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀\n⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig\nInstalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.",
   "keywords": [
     "Zig", "Programación Zig", "Instalación de Zig", "Zig en Linux", "Zig en Windows", "Zig en macOS", "Paquetes precompilados de Zig", "Construir Zig desde el código fuente", "Instalación de Zig con Snap", "Administrador de paquetes Scoop", "Homebrew para Zig", "MacPorts para Zig", "Configurar Zig", "Lenguaje de programación eficiente", "Lenguaje de programación moderno", "Aprender Zig", "Guía de instalación de Zig", "Instalar Zig en sistemas operativos", "Instrucciones de instalación de Zig"
   ],
-  "articleBody": "¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀\n⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig. ¡Comprueba siempre tu versión de Zig!\n1 $ zig version Output\n1 0.11.0-dev.3191+fd213accb Instalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.\nPaquetes precompilados: Descarga el paquete apropiado para tu distribución de Linux desde la página oficial de descargas de Zig. Extrae el archivo y agrega el binario zig a tu PATH.\nConstruir desde el código fuente: Si prefieres construir Zig desde el código fuente, sigue estos pasos:\nInstala las dependencias necesarias: build-essential, cmake y git. Clona el repositorio de Zig: git clone https://github.com/ziglang/zig.git Cambia al directorio clonado: cd zig Crea un directorio de construcción: mkdir build \u0026\u0026 cd build Ejecuta CMake para configurar la construcción: cmake .. Construye Zig: make Agrega el binario zig a tu PATH. Una forma alternativa es usar snap: snap install --edge zig --classic\nInstalando Zig en Windows 💻 Para usuarios de Windows, puedes instalar Zig utilizando los paquetes precompilados o el administrador de paquetes Scoop.\nPaquetes precompilados: Descarga el paquete apropiado para tu sistema desde la página oficial de descargas de Zig. Extrae el archivo y agrega el binario zig a tu PATH.\nScoop: Si tienes Scoop instalado, puedes instalar Zig ejecutando: scoop install zig\nInstalando Zig en macOS 🍏 Para usuarios de macOS, puedes instalar Zig utilizando los paquetes precompilados, Homebrew o MacPorts.\nPaquetes precompilados: Descarga el paquete apropiado para tu sistema desde la página oficial de descargas de Zig. Extrae el archivo y agrega el binario zig a tu PATH.\nHomebrew: Si tienes Homebrew instalado, puedes instalar Zig ejecutando: brew install zig\nMacPorts: Si tienes MacPorts instalado, puedes instalar Zig ejecutando: sudo port install zig\n¡Listo! Ahora deberías tener Zig instalado en tu sistema Linux, Windows o macOS. 🎉\n¿Qué más? 🌟 Con Zig instalado, estás listo para explorar temas más avanzados y aprovechar todo el potencial de este emocionante lenguaje. ¡Ánimo programador!\n",
-  "wordCount" : "403",
+  "articleBody": "¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀\n⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig\nInstalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.\nPaquetes precompilados: Descarga el paquete apropiado para tu distribución de Linux desde la página oficial de descargas de Zig. Extrae el archivo y agrega el binario zig a tu PATH.\nConstruir desde el código fuente: Si prefieres construir Zig desde el código fuente, sigue estos pasos:\nInstala las dependencias necesarias: build-essential, cmake y git. Clona el repositorio de Zig: git clone https://github.com/ziglang/zig.git Cambia al directorio clonado: cd zig Crea un directorio de construcción: mkdir build \u0026\u0026 cd build Ejecuta CMake para configurar la construcción: cmake .. Construye Zig: make Agrega el binario zig a tu PATH. Una forma alternativa es usar snap: snap install --edge zig --classic\nInstalando Zig en Windows 💻 Para usuarios de Windows, puedes instalar Zig utilizando los paquetes precompilados o el administrador de paquetes Scoop.\nPaquetes precompilados: Descarga el paquete apropiado para tu sistema desde la página oficial de descargas de Zig. Extrae el archivo y agrega el binario zig a tu PATH.\nScoop: Si tienes Scoop instalado, puedes instalar Zig ejecutando: scoop install zig\nInstalando Zig en macOS 🍏 Para usuarios de macOS, puedes instalar Zig utilizando los paquetes precompilados, Homebrew o MacPorts.\nPaquetes precompilados: Descarga el paquete apropiado para tu sistema desde la página oficial de descargas de Zig. Extrae el archivo y agrega el binario zig a tu PATH.\nHomebrew: Si tienes Homebrew instalado, puedes instalar Zig ejecutando: brew install zig\nMacPorts: Si tienes MacPorts instalado, puedes instalar Zig ejecutando: sudo port install zig\n¡Listo! Ahora deberías tener Zig instalado en tu sistema Linux, Windows o macOS. 🎉\n¿Qué más? 🌟 Con Zig instalado, estás listo para explorar temas más avanzados y aprovechar todo el potencial de este emocionante lenguaje. ¡Ánimo programador!\n",
+  "wordCount" : "365",
   "inLanguage": "es",
   "datePublished": "2023-05-12T00:00:00Z",
   "dateModified": "2023-05-12T00:00:00Z",
@@ -161,7 +172,7 @@ if (!doNotTrack) {
     <h1 class="post-title">
       Instalando Zig en Linux, Windows y macOS 🌍
     </h1>
-    <div class="post-meta"><span title='2023-05-12 00:00:00 +0000 +0000'>mayo 12, 2023</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;403 palabras&nbsp;·&nbsp;d4c7
+    <div class="post-meta"><span title='2023-05-12 00:00:00 +0000 +0000'>mayo 12, 2023</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;365 palabras&nbsp;·&nbsp;d4c7
 
 </div>
   </header> <div class="toc">
@@ -184,25 +195,8 @@ if (!doNotTrack) {
 
   <div class="post-content"><p>¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀</p>
 <blockquote>
-<p>⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig. ¡Comprueba siempre tu versión de Zig!</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ zig version
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Output</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>0.11.0-dev.3191+fd213accb
-</span></span></code></pre></td></tr></table>
-</div>
-</div></blockquote>
+<p>⚠️ <em>¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig</em></p>
+</blockquote>
 <h2 id="instalando-zig-en-linux-">Instalando Zig en Linux 🐧<a hidden class="anchor" aria-hidden="true" href="#instalando-zig-en-linux-">#</a></h2>
 <p>Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.</p>
 <ol>
@@ -317,9 +311,8 @@ if (!doNotTrack) {
     </a>
 </div>
   </footer><div>
-    <p>¡Te invitamos a participar en la discusión! ¿Tienes preguntas, ideas o experiencias para compartir sobre el post? ¡No dudes en dejar tus comentarios y unirte a la conversación! Queremos escuchar tu perspectiva y enriquecer nuestra comunidad con tus aportes. </p>
-    <p>¡No te quedes sin participar, tu voz es importante!</p>
-
+    <p>¡Te invitamos a participar en la discusión! ¿Tienes preguntas, ideas o experiencias para compartir sobre el post? ¡No dudes en dejar tus comentarios y unirte a la conversación! Queremos escuchar tu perspectiva y enriquecer nuestra comunidad con tus aportes. ¡No te quedes sin participar, tu voz es importante!</p>
+    
     <div class="share-buttons">
         <a target="_blank" rel="noopener noreferrer" aria-label="Comentarios de Instalando Zig en Linux, Windows y macOS 🌍" href="https://github.com/d4c7/zig-zagueando/discussions/categories/instalando-zig-en-linux-windows-y-macos">
            <p>Ver los comentarios 💬</p>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Zig-zagueando Blog</title>
     <link>https://d4c7.github.io/zig-zagueando/posts/</link>
-    <description>Recent content in Posts on Zig-zagueando Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Contenido reciente de Zig-zagueando Blog</description>
+    <generator>Zig-Zagueando</generator>
     <language>es-es</language>
     <lastBuildDate>Sat, 13 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagueando/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -24,7 +24,8 @@
       
       <guid>https://d4c7.github.io/zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/</guid>
       <description>¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀
-⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig.</description>
+⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig
+Instalando Zig en Linux 🐧 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.</description>
     </item>
     
     <item>
@@ -34,7 +35,8 @@
       
       <guid>https://d4c7.github.io/zig-zagueando/posts/configura-visual-studio-code-para-programar-en-zig/</guid>
       <description>¡Saludos, entusiastas de Zig! 👋 Es el momento de configurar un entorno de desarrollo cómodo para mejorar tu experiencia de programación en Zig. En esta publicación, te guiaré para configurar Visual Studio Code (VS Code) para el desarrollo en Zig, incluyendo edición de código, ejecución y depuración. ¡Sumérgete en el tema! 🚀
-⚠️ ¡Atención, programador! Este blog ha sido creado utilizando la versión dev 0.11.0 de Zig. Ten en cuenta que los ejemplos proporcionados aquí podrían no funcionar como se espera si estás utilizando una versión diferente de Zig.</description>
+⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig
+Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configurar VS Code para el desarrollo en Zig, sigue estos pasos:</description>
     </item>
     
   </channel>
