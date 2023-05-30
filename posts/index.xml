@@ -5,8 +5,8 @@
     <link>https://d4c7.github.io/zig-zagueando/posts/</link>
     <description>Contenido reciente de Zig-zagueando Blog</description>
     <generator>Zig-Zagueando</generator>
-    <language>es-es</language>
-    <lastBuildDate>Mon, 15 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagueando/posts/index.xml" rel="self" type="application/rss+xml" />
+    <language>es</language>
+    <lastBuildDate>Mon, 22 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagueando/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Zig: Un lenguaje de programación simple y potente 🚀</title>
       <link>https://d4c7.github.io/zig-zagueando/posts/zig-un-lenguaje-de-programaci%C3%B3n-simple-y-potente/</link>
@@ -46,6 +46,16 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
       <guid>https://d4c7.github.io/zig-zagueando/posts/una-gu%C3%ADa-del-sistema-de-construcci%C3%B3n-en-zig/</guid>
       <description>¡Hola, entusiastas de Zig! 👋 En nuestra publicación anterior, dimos nuestros primeros pasos en el mundo de Zig. Hoy, vamos a adentrarnos en el corazón de la gestión de proyectos de Zig: el sistema de construcción de Zig. ¡Empecemos! 🎉
 ¿Qué es el sistema de construcción de Zig? 🤔 El sistema de construcción de Zig es una herramienta poderosa e incorporada que te ayuda a gestionar, compilar, probar y enlazar tus proyectos.</description>
+    </item>
+    
+    <item>
+      <title>WebAssembly y Zig: Comenzando 🕸️🚀</title>
+      <link>https://d4c7.github.io/zig-zagueando/posts/webassembly-y-zig-comenzando/</link>
+      <pubDate>Mon, 22 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://d4c7.github.io/zig-zagueando/posts/webassembly-y-zig-comenzando/</guid>
+      <description>¡Hola, entusiastas de Zig! Hoy vamos a explorar un emocionante campo donde Zig realmente brilla: WebAssembly (Wasm). Prepárate para desbloquear el poder de Zig en el navegador! 🌐💪
+¿Qué es WebAssembly? 🧐 WebAssembly es un formato de instrucción binaria diseñado como un objetivo portable para la compilación de lenguajes de alto nivel como C, C++, Rust, y por supuesto, Zig. Nos permite ejecutar código en la web a una velocidad cercana a la nativa, abriendo la web a un nuevo rango de aplicaciones.</description>
     </item>
     
   </channel>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <title>Zigtris</title>
+    <link rel="stylesheet" href="zigtris.css">
+    <script src="zigtris.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+</head>
+
+<body>
+
+    <div id="game" class="container">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="button-container">
+        <a target="_blank" aria-label="Artículo en Zig-zagueando explicando cómo se hace este juego"
+            href="https://d4c7.github.io/zig-zagueando/zig-wasm-intro/">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                <path
+                    d="M180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h462l198 198v462q0 24-18 42t-42 18H180Zm0-60h600v-428.571H609V-780H180v600Zm99-111h402v-60H279v60Zm0-318h201v-60H279v60Zm0 159h402v-60H279v60Zm-99-330v171.429V-780v600-600Z" />
+            </svg>
+        </a>
+        <a target="_blank"  aria-label="Código fuente"
+            href="https://github.com/d4c7/zigtris">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                <path
+                    d="M450-154v-309L180-619v309l270 156Zm60 0 270-156v-310L510-463.162V-154Zm-30-360 266-155-266-154-267 154 267 155ZM150-258q-14.25-8.426-22.125-22.213T120-310v-340q0-16 7.875-29.787Q135.75-693.574 150-702l300-173q14.328-8 30.164-8Q496-883 510-875l300 173q14.25 8.426 22.125 22.213T840-650v340q0 16-7.875 29.787Q824.25-266.426 810-258L510-85q-14.328 8-30.164 8Q464-77 450-85L150-258Zm330-222Z" />
+            </svg> </a>
+
+        <a  aria-label="Pantalla completa"
+            href="javascript:goFullscreen('game')">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 -960 960 960" width="48">
+                <path d="M200-200v-193h60v133h133v60H200Zm0-367v-193h193v60H260v133h-60Zm367 367v-60h133v-133h60v193H567Zm133-367v-133H567v-60h193v193h-60Z" />
+            </svg> </a>
+    </div>
+</body>
+
+<script>
+    function goFullscreen(id) {
+        var element = document.getElementById(id);
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) { // Firefox
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) { // IE/Edge
+            element.msRequestFullscreen();
+        }
+    }
+</script>
+
+</html>
