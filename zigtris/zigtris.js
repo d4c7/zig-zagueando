@@ -17,11 +17,16 @@ const importObject = {
   },
 };
 
+var debuging=false;
+var setDebugFunction;
+
+const matrixToggle = () => {if (setDebugFunction) { debuging=!debuging; setDebugFunction(debuging);}};
+
+
 // Carga y ejecución del módulo WebAssembly
 WebAssembly.instantiateStreaming(fetch("zig-out/lib/zigtris.wasm"), importObject).then((result) => {
   // Creación de una vista de memoria en forma de Uint8Array
   const wasmMemoryArray = new Uint8Array(memory.buffer);
-
 
   const game = document.getElementById("game");
 
@@ -49,6 +54,10 @@ WebAssembly.instantiateStreaming(fetch("zig-out/lib/zigtris.wasm"), importObject
   const touchStart = result.instance.exports.touchStart;
   const touchEnd = result.instance.exports.touchEnd;
   const touchMove = result.instance.exports.touchMove;
+  setDebugFunction = result.instance.exports.setDebug;
+  
+ 
+
 
   // Mapeo de teclas a códigos de WebAssembly
   const KeyMap = {
