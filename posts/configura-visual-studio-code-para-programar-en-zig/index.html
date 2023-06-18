@@ -11,8 +11,8 @@
 Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configurar VS Code para el desarrollo en Zig, sigue estos pasos:">
 <meta name="author" content="d4c7">
 <link rel="canonical" href="https://d4c7.github.io/zig-zagueando/posts/configura-visual-studio-code-para-programar-en-zig/">
-<link crossorigin="anonymous" href="/zig-zagueando/assets/css/stylesheet.3ef3e38b1adcfbc3d7425552f9fefef044671ec30a048510004e9edc130ab84c.css" integrity="sha256-PvPjixrc&#43;8PXQlVS&#43;f7&#43;8ERnHsMKBIUQAE6e3BMKuEw=" rel="preload stylesheet" as="style">
-<script defer crossorigin="anonymous" src="/zig-zagueando/assets/js/highlight.8eb46ce6ae95f3b4f48cbf81919c1f29f8b4af182839c12176afa46a83658baf.js" integrity="sha256-jrRs5q6V87T0jL&#43;BkZwfKfi0rxgoOcEhdq&#43;kaoNli68="
+<link crossorigin="anonymous" href="/zig-zagueando/assets/css/stylesheet.8e8af8c7897af6457d28b7ea77a4d4acf670934d081625a7b0ec0a87f8fcbfcf.css" integrity="sha256-jor4x4l69kV9KLfqd6TUrPZwk00IFiWnsOwKh/j8v88=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zig-zagueando/assets/js/highlight.9a8019f45628f095e5668671b3b0e124b8cf7dda465f36166dcc239c8748a257.js" integrity="sha256-moAZ9FYo8JXlZoZxs7DhJLjPfdpGXzYWbcwjnIdIolc="
     onload="hljs.configure({ignoreUnescapedHTML:true});hljs.highlightAll();"></script>
 <link rel="icon" href="https://d4c7.github.io/zig-zagueando/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://d4c7.github.io/zig-zagueando/favicon-16x16.png">
@@ -97,8 +97,8 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
   "keywords": [
     "Zig", "Programación en Zig", "Visual Studio Code", "Configuración de Zig en VS Code", "Desarrollo en Zig", "Ejecución y depuración en Zig", "Entorno de desarrollo en Zig", "Extensiones de Zig para VS Code", "Compilación de código en Zig", "Depuración de código en Zig", "Desarrollo de proyectos en Zig"
   ],
-  "articleBody": "¡Saludos, entusiastas de Zig! 👋 Es el momento de configurar un entorno de desarrollo cómodo para mejorar tu experiencia de programación en Zig. En esta publicación, te guiaré para configurar Visual Studio Code (VS Code) para el desarrollo en Zig, incluyendo edición de código, ejecución y depuración. ¡Sumérgete en el tema! 🚀\nConfigurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configurar VS Code para el desarrollo en Zig, sigue estos pasos:\nInstala Visual Studio Code: Si aún no lo has hecho, descarga e instala Visual Studio Code para tu plataforma (Linux, Windows o macOS).\nInstala la extensión de Zig: Abre el buscador rápido de VS Code (Ctrl+P), pega el siguiente comando y presiona enter.\n1 ext install ziglang.vscode-zig Configura los ajustes: Para configurar los ajustes de la extensión de Zig, abre el editor de Configuración haciendo clic en el ícono de engranaje en la esquina inferior izquierda de la ventana y selecciona “Configuración”. Busca “Zig” en la barra de búsqueda y actualiza los ajustes según sea necesario. Por ejemplo, es posible que desees establecer la ruta del compilador de Zig si no está en la ubicación predeterminada. ¡Listo! Ahora estás listo para desarrollar en Zig en VS Code. 🎉\nEjecutando y depurando código 🏃‍♀️💻 Para ejecutar y depurar código Zig en VS Code, sigue estos pasos:\nCrea un nuevo archivo Zig: Abre VS Code y crea un nuevo archivo con la extensión .zig, como main.zig.\nEscribe código Zig: Escribe un programa sencillo en Zig en tu nuevo archivo, como un programa “Hola, mundo”:\n⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig\n1 2 3 4 5 6 const std = @import(\"std\"); pub fn main() !void { std.debug.print(\"Hello, {s}!\\n\", .{\"World\"}); } Configura tasks.json: Para ejecutar tu código Zig, necesitas crear un archivo tasks.json en la carpeta .vscode de tu espacio de trabajo. Agrega la siguiente configuración al archivo: 1 2 3 4 5 6 7 8 9 10 11 { \"version\": \"2.0.0\", \"tasks\": [ { \"label\": \"build\", \"type\": \"shell\", \"command\": \"zig build-exe main.zig\", \"group\": \"build\" } ] } Este archivo de configuración define tareas para Visual Studio Code. Las tareas se utilizan para automatizar el proceso de construcción, prueba y despliegue de tu aplicación. En este caso, estamos definiendo la tarea de compilación:\n\"label\": \"build\" - Es el nombre que se le da a la tarea. En este caso, la tarea se llama “build”. \"type\": \"shell\" - Especifica que esta tarea se ejecutará en una shell o terminal. \"command\": \"zig build-exe main.zig\" - Es el comando que se ejecutará cuando se inicie esta tarea. Este comando compilará el archivo main.zig en un ejecutable utilizando el compilador Zig. \"group\": \"build\" - Esto agrupa la tarea en la categoría “build”. Las tareas se pueden agrupar para un fácil acceso y gestión en Visual Studio Code. Ejecuta tu código Zig: Presiona Ctrl+Shift+B (o Cmd+Shift+B en macOS) para ejecutar la tarea “build”, que compila tu código Zig. Salida:\n1 2 * Executing task: zig build-exe \u003c...\u003e/main.zig * Terminal will be reused by tasks, press any key to close it. Depuración: Para depurar tu código Zig, primero debes instalar las extensiones “Native Debug” de WebFreak y “CodeLLDB” de Vadim Chugunov. Presiona ctrl-p (cmd+p en macOS) y ejecuta los siguientes comandos:\n1 ext install webfreak.debug y\n1 ext install vadimcn.vscode-lldb Una vez instaladas, crea un archivo launch.json en la carpeta .vscode de tu espacio de trabajo con la siguiente configuración:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 { \"version\": \"0.2.0\", \"configurations\": [ { \"name\": \"Debug Zig\", \"type\": \"lldb\", \"request\": \"launch\", \"program\": \"main\", \"args\": [], \"cwd\": \"${workspaceFolder}\", \"preLaunchTask\": \"build\" } ] } Este archivo de configuración de lanzamiento se usa para definir cómo se debe depurar un proyecto. El campo configurations tiene una lista de diferentes configuraciones de depuración que puedes usar. Puedes cambiar entre estas configuraciones en el menú desplegable de depuración en la parte superior de VS Code. La configuración se define así:\nname: Es el nombre que aparece en el menú desplegable de depuración. En este caso, está configurado como “Debug Zig”, lo que indica que esta configuración es para depurar programas escritos en Zig. type: Define el depurador que se utilizará. En este caso, “lldb” indica que se utilizará el depurador LLDB de LLVM. request: Puede ser “launch” o “attach”. “launch” inicia el programa en el depurador, mientras que “attach” se conecta a un proceso ya en ejecución. En la configuración el valor es “launch”, por lo que el depurador iniciará el programa. program: Es el nombre del programa que se va a iniciar. En esta configuración, el valor es “main”, por lo que se espera un ejecutable llamado “main” en tu directorio de trabajo actual. args: Es una lista de argumentos que se pasarán al programa cuando se lance. En tu caso, esta lista está vacía, por lo que no se pasarán argumentos. cwd: Especifica el directorio de trabajo actual cuando se inicia el programa. “${workspaceFolder}” es una variable que se refiere al directorio raíz de tu espacio de trabajo actual en VS Code. preLaunchTask: Es el nombre de una tarea definida en tasks.json que se ejecutará antes de que se lance el programa. Este es solo un ejemplo de configuración de depuración. La configuración exacta puede variar según el lenguaje de programación y el entorno de desarrollo específicos que estés utilizando.\nDepura tu código Zig: Establece puntos de interrupción en tu código Zig haciendo clic en el margen izquierdo junto a los números de línea. Presiona F5 para iniciar la depuración. El depurador se detendrá en tus puntos de interrupción, lo que te permitirá inspeccionar variables, avanzar paso a paso en tu código y utilizar otras funciones de depuración. ¡Eso es todo! Ahora has configurado Visual Studio Code para el desarrollo en Zig, incluyendo la ejecución, asistencia y depuración de tu código. 🎉\n¿Qué más? 🌟 Con tu flamante entorno de desarrollo Zig, estás listo para explorar temas avanzados de Zig y crear proyectos asombrosos. ¡Mantente atento a más publicaciones en el blog sobre conceptos avanzados de Zig!\n¡Sigamos explorando el mundo de Zig juntos! 👩‍💻👨‍💻🎨\n",
-  "wordCount" : "1018",
+  "articleBody": "¡Saludos, entusiastas de Zig! 👋 Es el momento de configurar un entorno de desarrollo cómodo para mejorar tu experiencia de programación en Zig. En esta publicación, te guiaré para configurar Visual Studio Code (VS Code) para el desarrollo en Zig, incluyendo edición de código, ejecución y depuración. ¡Sumérgete en el tema! 🚀\nConfigurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configurar VS Code para el desarrollo en Zig, sigue estos pasos:\nInstala Visual Studio Code: Si aún no lo has hecho, descarga e instala Visual Studio Code para tu plataforma (Linux, Windows o macOS).\nInstala la extensión de Zig: Abre el buscador rápido de VS Code (Ctrl+P), pega el siguiente comando y presiona enter.\next install ziglang.vscode-zig Configura los ajustes: Para configurar los ajustes de la extensión de Zig, abre el editor de Configuración haciendo clic en el ícono de engranaje en la esquina inferior izquierda de la ventana y selecciona “Configuración”. Busca “Zig” en la barra de búsqueda y actualiza los ajustes según sea necesario. Por ejemplo, es posible que desees establecer la ruta del compilador de Zig si no está en la ubicación predeterminada. ¡Listo! Ahora estás listo para desarrollar en Zig en VS Code. 🎉\nEjecutando y depurando código 🏃‍♀️💻 Para ejecutar y depurar código Zig en VS Code, sigue estos pasos:\nCrea un nuevo archivo Zig: Abre VS Code y crea un nuevo archivo con la extensión .zig, como main.zig.\nEscribe código Zig: Escribe un programa sencillo en Zig en tu nuevo archivo, como un programa “Hola, mundo”:\n⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig\nconst std = @import(\"std\"); pub fn main() !void { std.debug.print(\"Hello, {s}!\\n\", .{\"World\"}); } Configura tasks.json: Para ejecutar tu código Zig, necesitas crear un archivo tasks.json en la carpeta .vscode de tu espacio de trabajo. Agrega la siguiente configuración al archivo: { \"version\": \"2.0.0\", \"tasks\": [ { \"label\": \"build\", \"type\": \"shell\", \"command\": \"zig build-exe main.zig\", \"group\": \"build\" } ] } Este archivo de configuración define tareas para Visual Studio Code. Las tareas se utilizan para automatizar el proceso de construcción, prueba y despliegue de tu aplicación. En este caso, estamos definiendo la tarea de compilación:\n\"label\": \"build\" - Es el nombre que se le da a la tarea. En este caso, la tarea se llama “build”. \"type\": \"shell\" - Especifica que esta tarea se ejecutará en una shell o terminal. \"command\": \"zig build-exe main.zig\" - Es el comando que se ejecutará cuando se inicie esta tarea. Este comando compilará el archivo main.zig en un ejecutable utilizando el compilador Zig. \"group\": \"build\" - Esto agrupa la tarea en la categoría “build”. Las tareas se pueden agrupar para un fácil acceso y gestión en Visual Studio Code. Ejecuta tu código Zig: Presiona Ctrl+Shift+B (o Cmd+Shift+B en macOS) para ejecutar la tarea “build”, que compila tu código Zig. Salida:\n* Executing task: zig build-exe \u003c...\u003e/main.zig * Terminal will be reused by tasks, press any key to close it. Depuración: Para depurar tu código Zig, primero debes instalar las extensiones “Native Debug” de WebFreak y “CodeLLDB” de Vadim Chugunov. Presiona ctrl-p (cmd+p en macOS) y ejecuta los siguientes comandos:\next install webfreak.debug y\next install vadimcn.vscode-lldb Una vez instaladas, crea un archivo launch.json en la carpeta .vscode de tu espacio de trabajo con la siguiente configuración:\n{ \"version\": \"0.2.0\", \"configurations\": [ { \"name\": \"Debug Zig\", \"type\": \"lldb\", \"request\": \"launch\", \"program\": \"main\", \"args\": [], \"cwd\": \"${workspaceFolder}\", \"preLaunchTask\": \"build\" } ] } Este archivo de configuración de lanzamiento se usa para definir cómo se debe depurar un proyecto. El campo configurations tiene una lista de diferentes configuraciones de depuración que puedes usar. Puedes cambiar entre estas configuraciones en el menú desplegable de depuración en la parte superior de VS Code. La configuración se define así:\nname: Es el nombre que aparece en el menú desplegable de depuración. En este caso, está configurado como “Debug Zig”, lo que indica que esta configuración es para depurar programas escritos en Zig. type: Define el depurador que se utilizará. En este caso, “lldb” indica que se utilizará el depurador LLDB de LLVM. request: Puede ser “launch” o “attach”. “launch” inicia el programa en el depurador, mientras que “attach” se conecta a un proceso ya en ejecución. En la configuración el valor es “launch”, por lo que el depurador iniciará el programa. program: Es el nombre del programa que se va a iniciar. En esta configuración, el valor es “main”, por lo que se espera un ejecutable llamado “main” en tu directorio de trabajo actual. args: Es una lista de argumentos que se pasarán al programa cuando se lance. En tu caso, esta lista está vacía, por lo que no se pasarán argumentos. cwd: Especifica el directorio de trabajo actual cuando se inicia el programa. “${workspaceFolder}” es una variable que se refiere al directorio raíz de tu espacio de trabajo actual en VS Code. preLaunchTask: Es el nombre de una tarea definida en tasks.json que se ejecutará antes de que se lance el programa. Este es solo un ejemplo de configuración de depuración. La configuración exacta puede variar según el lenguaje de programación y el entorno de desarrollo específicos que estés utilizando.\nDepura tu código Zig: Establece puntos de interrupción en tu código Zig haciendo clic en el margen izquierdo junto a los números de línea. Presiona F5 para iniciar la depuración. El depurador se detendrá en tus puntos de interrupción, lo que te permitirá inspeccionar variables, avanzar paso a paso en tu código y utilizar otras funciones de depuración. ¡Eso es todo! Ahora has configurado Visual Studio Code para el desarrollo en Zig, incluyendo la ejecución, asistencia y depuración de tu código. 🎉\n¿Qué más? 🌟 Con tu flamante entorno de desarrollo Zig, estás listo para explorar temas avanzados de Zig y crear proyectos asombrosos. ¡Mantente atento a más publicaciones en el blog sobre conceptos avanzados de Zig!\n¡Sigamos explorando el mundo de Zig juntos! 👩‍💻👨‍💻🎨\n",
+  "wordCount" : "982",
   "inLanguage": "es",
   "image":"https://d4c7.github.io/zig-zagueando/covers/configura-visual-studio-code-para-programar-en-zig.webp","datePublished": "2023-05-13T00:00:00Z",
   "dateModified": "2023-05-13T00:00:00Z",
@@ -174,7 +174,7 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
     <h1 class="post-title">
       Configura Visual Studio Code para programar en Zig 🎨
     </h1>
-    <div class="post-meta"><span title='2023-05-13 00:00:00 +0000 +0000'>mayo 13, 2023</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;1018 palabras&nbsp;·&nbsp;d4c7
+    <div class="post-meta"><span title='2023-05-13 00:00:00 +0000 +0000'>mayo 13, 2023</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;982 palabras&nbsp;·&nbsp;d4c7
 
 </div>
   </header> 
@@ -208,15 +208,8 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
 <p>Instala la extensión de Zig: Abre el buscador rápido de VS Code (Ctrl+P), pega el siguiente comando y presiona enter.</p>
 </li>
 </ol>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>ext install ziglang.vscode-zig
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ol start="3">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>ext install ziglang.vscode-zig
+</span></span></code></pre></div><ol start="3">
 <li>Configura los ajustes: Para configurar los ajustes de la extensión de Zig, abre el editor de Configuración haciendo clic en el ícono de engranaje en la esquina inferior izquierda de la ventana y selecciona &ldquo;Configuración&rdquo;. Busca &ldquo;Zig&rdquo; en la barra de búsqueda y actualiza los ajustes según sea necesario. Por ejemplo, es posible que desees establecer la ruta del compilador de Zig si no está en la ubicación predeterminada.</li>
 </ol>
 <p>¡Listo! Ahora estás listo para desarrollar en Zig en VS Code. 🎉</p>
@@ -233,56 +226,26 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
 <blockquote>
 <p>⚠️ <em>¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig</em></p>
 </blockquote>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-zig" data-lang="zig"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> std <span style="color:#f92672">=</span> @import(<span style="color:#e6db74">&#34;std&#34;</span>);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> main() <span style="color:#f92672">!</span><span style="color:#66d9ef">void</span> {
-</span></span><span style="display:flex;"><span>    std.debug.print(<span style="color:#e6db74">&#34;Hello, {s}!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, .{<span style="color:#e6db74">&#34;World&#34;</span>});
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>  
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ol start="3">
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-zig" data-lang="zig"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>std<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#0086b3">@import</span>(<span style="color:#d14">&#34;std&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>main()<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">!</span><span style="color:#458;font-weight:bold">void</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>std.debug.print(<span style="color:#d14">&#34;Hello, {s}!</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>,<span style="color:#bbb"> </span>.{<span style="color:#d14">&#34;World&#34;</span>});<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><ol start="3">
 <li>Configura tasks.json: Para ejecutar tu código Zig, necesitas crear un archivo <code>tasks.json</code> en la carpeta <code>.vscode</code> de tu espacio de trabajo. Agrega la siguiente configuración al archivo:</li>
 </ol>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;version&#34;</span>: <span style="color:#e6db74">&#34;2.0.0&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;tasks&#34;</span>: [
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;version&#34;</span>: <span style="color:#d14">&#34;2.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;tasks&#34;</span>: [
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;label&#34;</span>: <span style="color:#e6db74">&#34;build&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;shell&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;command&#34;</span>: <span style="color:#e6db74">&#34;zig build-exe main.zig&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;group&#34;</span>: <span style="color:#e6db74">&#34;build&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;label&#34;</span>: <span style="color:#d14">&#34;build&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;shell&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;command&#34;</span>: <span style="color:#d14">&#34;zig build-exe main.zig&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;group&#34;</span>: <span style="color:#d14">&#34;build&#34;</span>
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  ]
-</span></span><span style="display:flex;"><span>}  
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Este archivo de configuración define tareas para Visual Studio Code. Las tareas se utilizan para automatizar el proceso de construcción, prueba y despliegue de tu aplicación. En este caso, estamos definiendo la tarea de compilación:</p>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Este archivo de configuración define tareas para Visual Studio Code. Las tareas se utilizan para automatizar el proceso de construcción, prueba y despliegue de tu aplicación. En este caso, estamos definiendo la tarea de compilación:</p>
 <ul>
 <li><code>&quot;label&quot;: &quot;build&quot;</code> - Es el nombre que se le da a la tarea. En este caso, la tarea se llama &ldquo;build&rdquo;.</li>
 <li><code>&quot;type&quot;: &quot;shell&quot;</code> - Especifica que esta tarea se ejecutará en una shell o terminal.</li>
@@ -293,73 +256,31 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
 <li>Ejecuta tu código Zig: Presiona <code>Ctrl+Shift+B</code> (o <code>Cmd+Shift+B</code> en macOS) para ejecutar la tarea &ldquo;build&rdquo;, que compila tu código Zig.</li>
 </ol>
 <p>Salida:</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span> *  Executing task: zig build-exe &lt;...&gt;/main.zig 
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span> *  Executing task: zig build-exe &lt;...&gt;/main.zig 
 </span></span><span style="display:flex;"><span> *  Terminal will be reused by tasks, press any key to close it.
-</span></span></code></pre></td></tr></table>
-</div>
-</div><ol start="5">
+</span></span></code></pre></div><ol start="5">
 <li>Depuración: Para depurar tu código Zig, primero debes instalar las extensiones &ldquo;Native Debug&rdquo; de WebFreak y &ldquo;CodeLLDB&rdquo; de Vadim Chugunov.</li>
 </ol>
 <p>Presiona ctrl-p (cmd+p en macOS) y ejecuta los siguientes comandos:</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>ext install webfreak.debug
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>y</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>ext install vadimcn.vscode-lldb
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Una vez instaladas, crea un archivo <code>launch.json</code> en la carpeta <code>.vscode</code> de tu espacio de trabajo con la siguiente configuración:</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;version&#34;</span>: <span style="color:#e6db74">&#34;0.2.0&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;configurations&#34;</span>: [
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>ext install webfreak.debug
+</span></span></code></pre></div><p>y</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>ext install vadimcn.vscode-lldb
+</span></span></code></pre></div><p>Una vez instaladas, crea un archivo <code>launch.json</code> en la carpeta <code>.vscode</code> de tu espacio de trabajo con la siguiente configuración:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;version&#34;</span>: <span style="color:#d14">&#34;0.2.0&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;configurations&#34;</span>: [
 </span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;name&#34;</span>: <span style="color:#e6db74">&#34;Debug Zig&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;lldb&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;request&#34;</span>: <span style="color:#e6db74">&#34;launch&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;program&#34;</span>: <span style="color:#e6db74">&#34;main&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;args&#34;</span>: [],
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;cwd&#34;</span>: <span style="color:#e6db74">&#34;${workspaceFolder}&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;preLaunchTask&#34;</span>: <span style="color:#e6db74">&#34;build&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;name&#34;</span>: <span style="color:#d14">&#34;Debug Zig&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;lldb&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;request&#34;</span>: <span style="color:#d14">&#34;launch&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;program&#34;</span>: <span style="color:#d14">&#34;main&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;args&#34;</span>: [],
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;cwd&#34;</span>: <span style="color:#d14">&#34;${workspaceFolder}&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;preLaunchTask&#34;</span>: <span style="color:#d14">&#34;build&#34;</span>
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  ]
-</span></span><span style="display:flex;"><span>}  
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Este archivo de configuración de lanzamiento se usa para definir cómo se debe depurar un proyecto. El campo <code>configurations</code> tiene una lista de diferentes configuraciones de depuración que puedes usar. Puedes cambiar entre estas configuraciones en el menú desplegable de depuración en la parte superior de VS Code. La configuración se define así:</p>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Este archivo de configuración de lanzamiento se usa para definir cómo se debe depurar un proyecto. El campo <code>configurations</code> tiene una lista de diferentes configuraciones de depuración que puedes usar. Puedes cambiar entre estas configuraciones en el menú desplegable de depuración en la parte superior de VS Code. La configuración se define así:</p>
 <ul>
 <li><code>name</code>: Es el nombre que aparece en el menú desplegable de depuración. En este caso, está configurado como &ldquo;Debug Zig&rdquo;, lo que indica que esta configuración es para depurar programas escritos en Zig.</li>
 <li><code>type</code>: Define el depurador que se utilizará. En este caso, &ldquo;lldb&rdquo; indica que se utilizará el depurador LLDB de LLVM.</li>
@@ -388,15 +309,15 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
     <ul class="post-tags">
     </ul>
 <nav class="paginav">
-  <a class="prev" href="https://d4c7.github.io/zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/">
+  <a class="prev" href="https://d4c7.github.io/zig-zagueando/posts/una-gu%C3%ADa-del-sistema-de-construcci%C3%B3n-en-zig/">
     <span class="title">« Anterior</span>
     <br>
-    <span>Instalando Zig en Linux, Windows y macOS 🌍</span>
+    <span>Una guía del sistema de construcción de Zig 🏗️</span>
   </a>
-  <a class="next" href="https://d4c7.github.io/zig-zagueando/posts/una-gu%C3%ADa-del-sistema-de-construcci%C3%B3n-en-zig/">
+  <a class="next" href="https://d4c7.github.io/zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/">
     <span class="title">Siguiente »</span>
     <br>
-    <span>Una guía del sistema de construcción de Zig 🏗️</span>
+    <span>Instalando Zig en Linux, Windows y macOS 🌍</span>
   </a>
 </nav>
 

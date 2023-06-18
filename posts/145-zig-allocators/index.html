@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Zig-zagueando Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="https://uwspace.uwaterloo.ca/handle/10012/18329
+Los asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:">
+<meta name="author" content="d4c7">
+<link rel="canonical" href="https://d4c7.github.io/zig-zagueando/posts/145-zig-allocators/">
+<link crossorigin="anonymous" href="/zig-zagueando/assets/css/stylesheet.8e8af8c7897af6457d28b7ea77a4d4acf670934d081625a7b0ec0a87f8fcbfcf.css" integrity="sha256-jor4x4l69kV9KLfqd6TUrPZwk00IFiWnsOwKh/j8v88=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zig-zagueando/assets/js/highlight.9a8019f45628f095e5668671b3b0e124b8cf7dda465f36166dcc239c8748a257.js" integrity="sha256-moAZ9FYo8JXlZoZxs7DhJLjPfdpGXzYWbcwjnIdIolc="
+    onload="hljs.configure({ignoreUnescapedHTML:true});hljs.highlightAll();"></script>
+<link rel="icon" href="https://d4c7.github.io/zig-zagueando/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://d4c7.github.io/zig-zagueando/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://d4c7.github.io/zig-zagueando/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://d4c7.github.io/zig-zagueando/apple-touch-icon.png">
+<link rel="mask-icon" href="https://d4c7.github.io/zig-zagueando/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&family=Tajawal:wght@300&display=swap" rel="stylesheet">
+</noscript>
+
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&family=Tajawal:wght@300&display=swapp" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-59LR4NE7W9"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-59LR4NE7W9', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="" />
+<meta property="og:description" content="https://uwspace.uwaterloo.ca/handle/10012/18329
+Los asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://d4c7.github.io/zig-zagueando/posts/145-zig-allocators/" /><meta property="article:section" content="posts" />
+
+<meta property="og:site_name" content="Programando con Zig" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="https://uwspace.uwaterloo.ca/handle/10012/18329
+Los asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://d4c7.github.io/zig-zagueando/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "",
+      "item": "https://d4c7.github.io/zig-zagueando/posts/145-zig-allocators/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "",
+  "name": "",
+  "description": "https://uwspace.uwaterloo.ca/handle/10012/18329\nLos asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:",
+  "keywords": [
+    
+  ],
+  "articleBody": "https://uwspace.uwaterloo.ca/handle/10012/18329\nLos asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:\nEstrategia de Primera Ajuste (First-Fit): Este es un enfoque directo donde el asignador de memoria escanea desde el inicio de la lista de espacio libre y asigna el primer bloque de memoria que es lo suficientemente grande para satisfacer la solicitud. Este método puede ser rápido pero puede llevar a la fragmentación con el tiempo.\nEstrategia de Mejor Ajuste (Best-Fit): En este enfoque, el asignador de memoria busca en toda la lista de espacio libre y asigna el bloque de memoria más pequeño que es lo suficientemente grande para satisfacer la solicitud. El objetivo aquí es minimizar el espacio desperdiciado, pero la estrategia puede ser más lenta que la primera ajuste porque requiere escanear toda la lista. Además, todavía puede llevar a la fragmentación, especialmente con pedazos de memoria muy pequeños sobrantes.\nEstrategia de Peor Ajuste (Worst-Fit): La estrategia de peor ajuste asigna el bloque de memoria más grande que satisface la solicitud. La idea aquí es dejar una pieza de memoria no asignada tan grande como sea posible, que podría ser útil para satisfacer grandes solicitudes en el futuro. Sin embargo, al igual que el mejor ajuste, esta estrategia puede ser lenta porque requiere escanear toda la lista de espacio libre, y también puede llevar a la fragmentación.\nEstrategia de Siguiente Ajuste (Next-Fit): El siguiente ajuste es una variante del primera ajuste. En lugar de iniciar el escaneo de memoria libre desde el principio cada vez, comienza desde donde se detuvo durante la última asignación. Esta estrategia puede ser más rápida que el primera ajuste si las asignaciones y desasignaciones son frecuentes, pero también puede llevar a la fragmentación.\nSistema de Compañeros (Buddy System): Este es un tipo diferente de estrategia de asignación de memoria que opera con trozos de memoria que son potencias de dos. Cuando se hace una solicitud, el asignador encuentra el trozo de potencia de dos más pequeño que puede satisfacer la solicitud. Si el trozo es más grande que la solicitud, se divide en dos ‘compañeros’, y el proceso continúa hasta que el trozo es lo suficientemente pequeño. El sistema de compañeros es eficiente y reduce la fragmentación, pero puede desperdiciar memoria si las solicitudes no se alinean bien con las potencias de dos.\nAsignación de Bloques (Slab Allocation): Esta estrategia se utiliza para prevenir la fragmentación causada por la asignación de pequeños bloques de memoria. La idea es dividir la memoria en trozos (o ‘bloques’) de un cierto tamaño. Cada bloque se divide luego en bloques de un tamaño fijo, adecuado para un tipo particular de estructura de datos. Cuando se\nhace una solicitud, se asigna un bloque del bloque adecuado. La asignación de bloques es útil en sistemas donde ciertos tipos de estructuras de datos se asignan y desasignan con frecuencia.\nPooling: El pooling es una estrategia donde la memoria se preasigna en pools de objetos del mismo tamaño. Cuando se solicita un objeto, se toma del pool apropiado. Cuando se desasigna, se devuelve a su pool. Esto puede ser mucho más rápido que otros tipos de asignación porque los objetos ya están asignados; es solo una cuestión de asignarlos y desasignarlos. Ten en cuenta que estas son solo algunas de las estrategias que un asignador de memoria podría usar. En la práctica, muchos asignadores usan una combinación de estas estrategias, dependiendo de los requisitos específicos del sistema para el que están diseñados.\nZig es un lenguaje de programación de propósito general diseñado para reemplazar a C. Zig es bastante novedoso y todavía está en desarrollo. A continuación, se muestra una implementación simplificada del sistema de compañeros en Zig. Ten en cuenta que este es un ejemplo básico y no aborda completamente la funcionalidad que un verdadero sistema de compañeros debería tener.\nconst std = @import(\"std\"); var memory: [8][1024]usize = undefined; pub fn main() void { // inicializar el sistema de compañeros con un bloque de 1024 memory[10][0] = 1024; var block: usize = allocate(256); deallocate(block, 256); } fn log2(n: usize) usize { return std.math.log2_int_ceil(n); } fn allocate(size: usize) usize { const index = log2(size); for (memory[index..]) |blocks, i| { if (blocks[0] != 0) { const block = blocks[0]; blocks[0] = 0; while (i \u003e 0) { i -= 1; memory[index + i][0] = block + (1 \u003c\u003c i); } return block; } } return 0; // no hay bloque suficientemente grande } fn deallocate(block: usize, size: usize) void { const index = log2(size); const buddy = block ^ size; for (memory[index..]) |blocks| { if (blocks[0] == buddy) { blocks[0] = 0; deallocate(std.math.min(block, buddy), size * 2); return; } } memory[index][0] = block; } Por favor ten en cuenta que este código es para ilustrar la lógica básica del sistema de compañeros y no ha sido probado en un entorno de ejecución real. La implementación real en un sistema operativo o un asignador de memoria sería mucho más compleja e implicaría detalles adicionales, como el seguimiento de la información sobre qué bloques de memoria están asignados a qué procesos, el manejo de solicitudes de memoria que no son potencias de 2, y el manejo de errores.\nAgregar pruebas a la implementación del sistema de compañeros puede ayudar a asegurar que el código funcione como se espera. Aquí hay un ejemplo de cómo podrías añadir pruebas a la implementación de Zig que proporcioné:\nconst std = @import(\"std\"); var memory: [8][1024]usize = undefined; pub fn main() void { // inicializar el sistema de compañeros con un bloque de 1024 memory[10][0] = 1024; // Test 1: Asignar un bloque de 256 y verificar que se ha asignado correctamente var block: usize = allocate(256); std.testing.assert(block != 0); // Test 2: Intentar asignar un bloque demasiado grande y verificar que no se asigna block = allocate(2048); std.testing.assert(block == 0); // Test 3: Liberar un bloque y verificar que se puede reasignar deallocate(block, 256); block = allocate(256); std.testing.assert(block != 0); } fn log2(n: usize) usize { return std.math.log2_int_ceil(n); } fn allocate(size: usize) usize { const index = log2(size); for (memory[index..]) |blocks, i| { if (blocks[0] != 0) { const block = blocks[0]; blocks[0] = 0; while (i \u003e 0) { i -= 1; memory[index + i][0] = block + (1 \u003c\u003c i); } return block; } } return 0; // no hay bloque suficientemente grande } fn deallocate(block: usize, size: usize) void { const index = log2(size); const buddy = block ^ size; for (memory[index..]) |blocks| { if (blocks[0] == buddy) { blocks[0] = 0; deallocate(std.math.min(block, buddy), size * 2); return; } } memory[index][0] = block; } Estas pruebas son bastante básicas y solo cubren algunos escenarios posibles. En una implementación real, querrías tener pruebas más completas que cubran una variedad de situaciones, como asignar y liberar bloques de varios tamaños diferentes y verificar que el sistema de compañeros maneja correctamente la combinación de bloques. También querrías tener pruebas que verifiquen el manejo de errores, como intentar liberar un bloque que no está asignado.\nLa fragmentación de la memoria es un problema común en los sistemas de gestión de memoria, especialmente en los sistemas con memoria dinámica. La fragmentación ocurre cuando la memoria está dividida en bloques de diferentes tamaños, lo que puede hacer que sea difícil asignar memoria para nuevos objetos.\nAquí hay algunas estrategias para evitar la fragmentación en un asignador (allocator):\nAsignación Contigua: Siempre que sea posible, intenta asignar memoria en bloques contiguos. Esto minimizará la cantidad de fragmentación ya que hay menos espacios pequeños entre los bloques de memoria.\nAlgoritmo de asignación: El uso de un algoritmo de asignación apropiado puede ayudar a minimizar la fragmentación. Por ejemplo, el algoritmo “First fit” asigna memoria al primer bloque que es lo suficientemente grande. Este algoritmo es rápido pero puede conducir a fragmentación. Por otro lado, el algoritmo “Best fit” asigna memoria al bloque más pequeño que es lo suficientemente grande, lo cual minimiza la fragmentación pero puede ser más lento.\nCompaction: Regularmente puedes compactar la memoria, moviendo los bloques de memoria para llenar los espacios vacíos. Esto puede ser costoso en términos de tiempo de CPU, pero puede ayudar a prevenir la fragmentación.\nReciclaje de bloques: En lugar de siempre asignar nueva memoria, puedes mantener una lista de bloques de memoria que se han liberado y reutilizarlos cuando sea posible.\nUso de tamaños de bloque estándar: Otra técnica útil puede ser utilizar tamaños de bloque estándar o limitar la cantidad de diferentes tamaños de bloques que puedes asignar. Esto puede minimizar la fragmentación al evitar tener muchos bloques de tamaños ligeramente diferentes.\nPágina de memoria: En algunos sistemas, puedes utilizar la paginación de memoria, que divide la memoria en páginas de un tamaño fijo. Esto puede evitar la fragmentación interna al asignar siempre en términos de páginas completas.\nAlgoritmo de Garbage Collection: Para los lenguajes que soportan la recolección de basura, el recolector de basura puede ayudar a minimizar la fragmentación al reorganizar los objetos en memoria.\nRecuerda que estas estrategias pueden tener sus propias desventajas y su efectividad puede variar dependiendo del sistema específico y del patrón de asignación/desasignación de memoria.\n",
+  "wordCount" : "1569",
+  "inLanguage": "es",
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "d4c7"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://d4c7.github.io/zig-zagueando/posts/145-zig-allocators/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zig-zagueando Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://d4c7.github.io/zig-zagueando/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://d4c7.github.io/zig-zagueando/" accesskey="h" title="Zig-zagueando Blog (Alt + H)">Zig-zagueando Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://d4c7.github.io/zig-zagueando/search/" title="Buscar">
+                    <span>Buscar</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://d4c7.github.io/zig-zagueando/">Inicio</a>&nbsp;»&nbsp;<a href="https://d4c7.github.io/zig-zagueando/posts/">Posts</a></div>
+    <h1 class="post-title">
+      
+    </h1>
+    <div class="post-meta">8 min&nbsp;·&nbsp;1569 palabras&nbsp;·&nbsp;d4c7
+
+</div>
+  </header> 
+
+  <div class="post-content"><p><a href="https://uwspace.uwaterloo.ca/handle/10012/18329">https://uwspace.uwaterloo.ca/handle/10012/18329</a></p>
+<p>Los asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:</p>
+<ol>
+<li>
+<p><strong>Estrategia de Primera Ajuste (First-Fit):</strong> Este es un enfoque directo donde el asignador de memoria escanea desde el inicio de la lista de espacio libre y asigna el primer bloque de memoria que es lo suficientemente grande para satisfacer la solicitud. Este método puede ser rápido pero puede llevar a la fragmentación con el tiempo.</p>
+</li>
+<li>
+<p><strong>Estrategia de Mejor Ajuste (Best-Fit):</strong> En este enfoque, el asignador de memoria busca en toda la lista de espacio libre y asigna el bloque de memoria más pequeño que es lo suficientemente grande para satisfacer la solicitud. El objetivo aquí es minimizar el espacio desperdiciado, pero la estrategia puede ser más lenta que la primera ajuste porque requiere escanear toda la lista. Además, todavía puede llevar a la fragmentación, especialmente con pedazos de memoria muy pequeños sobrantes.</p>
+</li>
+<li>
+<p><strong>Estrategia de Peor Ajuste (Worst-Fit):</strong> La estrategia de peor ajuste asigna el bloque de memoria más grande que satisface la solicitud. La idea aquí es dejar una pieza de memoria no asignada tan grande como sea posible, que podría ser útil para satisfacer grandes solicitudes en el futuro. Sin embargo, al igual que el mejor ajuste, esta estrategia puede ser lenta porque requiere escanear toda la lista de espacio libre, y también puede llevar a la fragmentación.</p>
+</li>
+<li>
+<p><strong>Estrategia de Siguiente Ajuste (Next-Fit):</strong> El siguiente ajuste es una variante del primera ajuste. En lugar de iniciar el escaneo de memoria libre desde el principio cada vez, comienza desde donde se detuvo durante la última asignación. Esta estrategia puede ser más rápida que el primera ajuste si las asignaciones y desasignaciones son frecuentes, pero también puede llevar a la fragmentación.</p>
+</li>
+<li>
+<p><strong>Sistema de Compañeros (Buddy System):</strong> Este es un tipo diferente de estrategia de asignación de memoria que opera con trozos de memoria que son potencias de dos. Cuando se hace una solicitud, el asignador encuentra el trozo de potencia de dos más pequeño que puede satisfacer la solicitud. Si el trozo es más grande que la solicitud, se divide en dos &lsquo;compañeros&rsquo;, y el proceso continúa hasta que el trozo es lo suficientemente pequeño. El sistema de compañeros es eficiente y reduce la fragmentación, pero puede desperdiciar memoria si las solicitudes no se alinean bien con las potencias de dos.</p>
+</li>
+<li>
+<p><strong>Asignación de Bloques (Slab Allocation):</strong> Esta estrategia se utiliza para prevenir la fragmentación causada por la asignación de pequeños bloques de memoria. La idea es dividir la memoria en trozos (o &lsquo;bloques&rsquo;) de un cierto tamaño. Cada bloque se divide luego en bloques de un tamaño fijo, adecuado para un tipo particular de estructura de datos. Cuando se</p>
+</li>
+</ol>
+<p>hace una solicitud, se asigna un bloque del bloque adecuado. La asignación de bloques es útil en sistemas donde ciertos tipos de estructuras de datos se asignan y desasignan con frecuencia.</p>
+<ol start="7">
+<li><strong>Pooling:</strong> El pooling es una estrategia donde la memoria se preasigna en pools de objetos del mismo tamaño. Cuando se solicita un objeto, se toma del pool apropiado. Cuando se desasigna, se devuelve a su pool. Esto puede ser mucho más rápido que otros tipos de asignación porque los objetos ya están asignados; es solo una cuestión de asignarlos y desasignarlos.</li>
+</ol>
+<p>Ten en cuenta que estas son solo algunas de las estrategias que un asignador de memoria podría usar. En la práctica, muchos asignadores usan una combinación de estas estrategias, dependiendo de los requisitos específicos del sistema para el que están diseñados.</p>
+<p>Zig es un lenguaje de programación de propósito general diseñado para reemplazar a C. Zig es bastante novedoso y todavía está en desarrollo. A continuación, se muestra una implementación simplificada del sistema de compañeros en Zig. Ten en cuenta que este es un ejemplo básico y no aborda completamente la funcionalidad que un verdadero sistema de compañeros debería tener.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-zig" data-lang="zig"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>std<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#0086b3">@import</span>(<span style="color:#d14">&#34;std&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">var</span><span style="color:#bbb"> </span>memory<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span>[<span style="color:#099">8</span>][<span style="color:#099">1024</span>]<span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">undefined</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>main()<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">void</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic">// inicializar el sistema de compañeros con un bloque de 1024
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span><span style="color:#bbb">    </span>memory[<span style="color:#099">10</span>][<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#099">1024</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">var</span><span style="color:#bbb"> </span>block<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>allocate(<span style="color:#099">256</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>deallocate(block,<span style="color:#bbb"> </span><span style="color:#099">256</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>log2(n<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>)<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">return</span><span style="color:#bbb"> </span>std.math.log2_int_ceil(n);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>allocate(size<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>)<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>index<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>log2(size);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">for</span><span style="color:#bbb"> </span>(memory[index..])<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">|</span>blocks,<span style="color:#bbb"> </span>i<span style="color:#000;font-weight:bold">|</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000;font-weight:bold">if</span><span style="color:#bbb"> </span>(blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">!=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>blocks[<span style="color:#099">0</span>];<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">while</span><span style="color:#bbb"> </span>(i<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">&gt;</span><span style="color:#bbb"> </span><span style="color:#099">0</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span>i<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">-=</span><span style="color:#bbb"> </span><span style="color:#099">1</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span>memory[index<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">+</span><span style="color:#bbb"> </span>i][<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">+</span><span style="color:#bbb"> </span>(<span style="color:#099">1</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">&lt;&lt;</span><span style="color:#bbb"> </span>i);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">return</span><span style="color:#bbb"> </span>block;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">return</span><span style="color:#bbb"> </span><span style="color:#099">0</span>;<span style="color:#bbb"> </span><span style="color:#998;font-style:italic">// no hay bloque suficientemente grande
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>deallocate(block<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>,<span style="color:#bbb"> </span>size<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>)<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">void</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>index<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>log2(size);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>buddy<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">^</span><span style="color:#bbb"> </span>size;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">for</span><span style="color:#bbb"> </span>(memory[index..])<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">|</span>blocks<span style="color:#000;font-weight:bold">|</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000;font-weight:bold">if</span><span style="color:#bbb"> </span>(blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">==</span><span style="color:#bbb"> </span>buddy)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>deallocate(std.math.min(block,<span style="color:#bbb"> </span>buddy),<span style="color:#bbb"> </span>size<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">*</span><span style="color:#bbb"> </span><span style="color:#099">2</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">return</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>memory[index][<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>block;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Por favor ten en cuenta que este código es para ilustrar la lógica básica del sistema de compañeros y no ha sido probado en un entorno de ejecución real. La implementación real en un sistema operativo o un asignador de memoria sería mucho más compleja e implicaría detalles adicionales, como el seguimiento de la información sobre qué bloques de memoria están asignados a qué procesos, el manejo de solicitudes de memoria que no son potencias de 2, y el manejo de errores.</p>
+<p>Agregar pruebas a la implementación del sistema de compañeros puede ayudar a asegurar que el código funcione como se espera. Aquí hay un ejemplo de cómo podrías añadir pruebas a la implementación de Zig que proporcioné:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-zig" data-lang="zig"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>std<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#0086b3">@import</span>(<span style="color:#d14">&#34;std&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">var</span><span style="color:#bbb"> </span>memory<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span>[<span style="color:#099">8</span>][<span style="color:#099">1024</span>]<span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">undefined</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">pub</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>main()<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">void</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic">// inicializar el sistema de compañeros con un bloque de 1024
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span><span style="color:#bbb">    </span>memory[<span style="color:#099">10</span>][<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#099">1024</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic">// Test 1: Asignar un bloque de 256 y verificar que se ha asignado correctamente
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">var</span><span style="color:#bbb"> </span>block<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>allocate(<span style="color:#099">256</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>std.testing.assert(block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">!=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic">// Test 2: Intentar asignar un bloque demasiado grande y verificar que no se asigna
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span><span style="color:#bbb">    </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>allocate(<span style="color:#099">2048</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>std.testing.assert(block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">==</span><span style="color:#bbb"> </span><span style="color:#099">0</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#998;font-style:italic">// Test 3: Liberar un bloque y verificar que se puede reasignar
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span><span style="color:#bbb">    </span>deallocate(block,<span style="color:#bbb"> </span><span style="color:#099">256</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>allocate(<span style="color:#099">256</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>std.testing.assert(block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">!=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>log2(n<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>)<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">return</span><span style="color:#bbb"> </span>std.math.log2_int_ceil(n);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>allocate(size<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>)<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>index<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>log2(size);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">for</span><span style="color:#bbb"> </span>(memory[index..])<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">|</span>blocks,<span style="color:#bbb"> </span>i<span style="color:#000;font-weight:bold">|</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000;font-weight:bold">if</span><span style="color:#bbb"> </span>(blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">!=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>blocks[<span style="color:#099">0</span>];<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">while</span><span style="color:#bbb"> </span>(i<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">&gt;</span><span style="color:#bbb"> </span><span style="color:#099">0</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span>i<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">-=</span><span style="color:#bbb"> </span><span style="color:#099">1</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">                </span>memory[index<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">+</span><span style="color:#bbb"> </span>i][<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">+</span><span style="color:#bbb"> </span>(<span style="color:#099">1</span><span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">&lt;&lt;</span><span style="color:#bbb"> </span>i);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">return</span><span style="color:#bbb"> </span>block;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">return</span><span style="color:#bbb"> </span><span style="color:#099">0</span>;<span style="color:#bbb"> </span><span style="color:#998;font-style:italic">// no hay bloque suficientemente grande
+</span></span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"></span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000;font-weight:bold">fn</span><span style="color:#bbb"> </span>deallocate(block<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>,<span style="color:#bbb"> </span>size<span style="color:#000;font-weight:bold">:</span><span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">usize</span>)<span style="color:#bbb"> </span><span style="color:#458;font-weight:bold">void</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>index<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>log2(size);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">const</span><span style="color:#bbb"> </span>buddy<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>block<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">^</span><span style="color:#bbb"> </span>size;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#000;font-weight:bold">for</span><span style="color:#bbb"> </span>(memory[index..])<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">|</span>blocks<span style="color:#000;font-weight:bold">|</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#000;font-weight:bold">if</span><span style="color:#bbb"> </span>(blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">==</span><span style="color:#bbb"> </span>buddy)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>blocks[<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span><span style="color:#099">0</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>deallocate(std.math.min(block,<span style="color:#bbb"> </span>buddy),<span style="color:#bbb"> </span>size<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">*</span><span style="color:#bbb"> </span><span style="color:#099">2</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#000;font-weight:bold">return</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>memory[index][<span style="color:#099">0</span>]<span style="color:#bbb"> </span><span style="color:#000;font-weight:bold">=</span><span style="color:#bbb"> </span>block;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Estas pruebas son bastante básicas y solo cubren algunos escenarios posibles. En una implementación real, querrías tener pruebas más completas que cubran una variedad de situaciones, como asignar y liberar bloques de varios tamaños diferentes y verificar que el sistema de compañeros maneja correctamente la combinación de bloques. También querrías tener pruebas que verifiquen el manejo de errores, como intentar liberar un bloque que no está asignado.</p>
+<p>La fragmentación de la memoria es un problema común en los sistemas de gestión de memoria, especialmente en los sistemas con memoria dinámica. La fragmentación ocurre cuando la memoria está dividida en bloques de diferentes tamaños, lo que puede hacer que sea difícil asignar memoria para nuevos objetos.</p>
+<p>Aquí hay algunas estrategias para evitar la fragmentación en un asignador (allocator):</p>
+<ol>
+<li>
+<p><strong>Asignación Contigua:</strong> Siempre que sea posible, intenta asignar memoria en bloques contiguos. Esto minimizará la cantidad de fragmentación ya que hay menos espacios pequeños entre los bloques de memoria.</p>
+</li>
+<li>
+<p><strong>Algoritmo de asignación:</strong> El uso de un algoritmo de asignación apropiado puede ayudar a minimizar la fragmentación. Por ejemplo, el algoritmo &ldquo;First fit&rdquo; asigna memoria al primer bloque que es lo suficientemente grande. Este algoritmo es rápido pero puede conducir a fragmentación. Por otro lado, el algoritmo &ldquo;Best fit&rdquo; asigna memoria al bloque más pequeño que es lo suficientemente grande, lo cual minimiza la fragmentación pero puede ser más lento.</p>
+</li>
+<li>
+<p><strong>Compaction:</strong> Regularmente puedes compactar la memoria, moviendo los bloques de memoria para llenar los espacios vacíos. Esto puede ser costoso en términos de tiempo de CPU, pero puede ayudar a prevenir la fragmentación.</p>
+</li>
+<li>
+<p><strong>Reciclaje de bloques:</strong> En lugar de siempre asignar nueva memoria, puedes mantener una lista de bloques de memoria que se han liberado y reutilizarlos cuando sea posible.</p>
+</li>
+<li>
+<p><strong>Uso de tamaños de bloque estándar:</strong> Otra técnica útil puede ser utilizar tamaños de bloque estándar o limitar la cantidad de diferentes tamaños de bloques que puedes asignar. Esto puede minimizar la fragmentación al evitar tener muchos bloques de tamaños ligeramente diferentes.</p>
+</li>
+<li>
+<p><strong>Página de memoria:</strong> En algunos sistemas, puedes utilizar la paginación de memoria, que divide la memoria en páginas de un tamaño fijo. Esto puede evitar la fragmentación interna al asignar siempre en términos de páginas completas.</p>
+</li>
+<li>
+<p><strong>Algoritmo de Garbage Collection:</strong> Para los lenguajes que soportan la recolección de basura, el recolector de basura puede ayudar a minimizar la fragmentación al reorganizar los objetos en memoria.</p>
+</li>
+</ol>
+<p>Recuerda que estas estrategias pueden tener sus propias desventajas y su efectividad puede variar dependiendo del sistema específico y del patrón de asignación/desasignación de memoria.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://d4c7.github.io/zig-zagueando/posts/zig-un-lenguaje-de-programaci%C3%B3n-simple-y-potente/">
+    <span class="title">« Anterior</span>
+    <br>
+    <span>Zig: Un lenguaje de programación simple y potente 🚀</span>
+  </a>
+  <a class="next" href="https://d4c7.github.io/zig-zagueando/posts/strings/">
+    <span class="title">Siguiente »</span>
+    <br>
+    <span></span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on twitter"
+        href="https://twitter.com/intent/tweet/?text=&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on twitter"
+        href="https://mastodon.social/share?text=&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f&amp;hashtags=">
+        <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 134.98711 134.98711"  height="30px" width="30px" fill="currentColor">
+            <path
+            id="path173"
+            style="stroke-width:0.263647"
+            d="m 16.731795,0.23977865 c -9.1024158,0 -16.49201635,7.38992375 -16.49201635,16.49201635 V 118.73487 c 0,9.10226 7.38985565,16.49202 16.49201635,16.49202 H 118.73487 c 9.10214,0 16.49202,-7.38976 16.49202,-16.49202 V 16.731795 c 0,-9.1020926 -7.38961,-16.49201635 -16.49202,-16.49201635 z M 67.439294,10.841715 c 14.33843,-0.05813 28.783417,1.646195 36.594666,5.294251 0,0 15.91014,7.255352 15.91014,31.968591 0,0 0.20549,18.227747 -2.23449,30.892688 -1.55702,8.036749 -13.76419,16.8293 -27.786933,18.533753 -5.022382,0.607318 -23.265943,3.605592 -44.66084,-1.706356 -0.0048,1.181997 0.06971,2.368525 0.222208,3.541903 1.656724,12.607705 12.293926,13.366905 22.390882,13.722155 10.191884,0.33227 18.422648,-2.56831 18.422648,-2.56831 l 0.42633,9.38289 c 0,0 -6.280354,3.89032 -18.978686,4.60798 -6.997135,0.4035 -15.701008,-0.18203 -25.82168,-2.90215 -26.42692,-7.14414 -26.405106,-44.08773 -26.405106,-73.505069 0,-24.71324 15.937528,-31.968075 15.937528,-31.968075 7.40775,-3.415535 21.644915,-5.240421 35.983333,-5.294251 z m 15.973702,18.845362 c -4.915817,0.118459 -9.781729,2.307054 -12.784232,6.975801 L 67.745219,41.57679 64.852372,36.662878 C 61.861733,32.020326 57.007083,29.816291 52.094495,29.690694 v -0.0016 c -4.9126,-0.131685 -9.884165,1.806349 -13.109794,5.442562 -5.881561,6.821562 -4.589384,11.286347 -4.589384,42.018624 h 11.644767 v -26.7208 c 0,-12.50759 15.938045,-12.98127 15.938045,1.74408 V 67.656852 H 73.521094 V 52.17356 c 0,-14.724632 15.947347,-14.241724 15.947347,-1.733228 v 26.72085 h 11.617379 v -0.0098 c 0,-30.708592 1.31591,-35.144851 -4.589384,-42.018624 -3.201876,-3.612175 -8.167622,-5.564121 -13.08344,-5.445662 z" />    
+       </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f&amp;title=&amp;summary=&amp;source=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on reddit"
+        href="https://reddit.com/submit?url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f&title=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on whatsapp"
+        href="https://api.whatsapp.com/send?text=%20-%20https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share  on telegram"
+        href="https://telegram.me/share/url?text=&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2f145-zig-allocators%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+  </footer><div>
+    <p>¡Te invitamos a participar en la discusión! ¿Tienes preguntas, ideas o experiencias para compartir sobre el post? ¡No dudes en dejar tus comentarios y unirte a la conversación! Queremos escuchar tu perspectiva y enriquecer nuestra comunidad con tus aportes. ¡No te quedes sin participar, tu voz es importante!</p>
+
+    <div class="share-buttons">
+        <a target="_blank" rel="noopener noreferrer" aria-label="Comentarios de " href="https://github.com/d4c7/zig-zagueando/discussions/categories/145-zig-allocators">
+           <p>Ver los comentarios 💬</p>
+        </a>
+    </div>
+</div>
+
+
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://d4c7.github.io/zig-zagueando/">Zig-zagueando Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copiar';
+
+        function copyingDone() {
+            copybutton.innerHTML = '¡copiado!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copiar';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
