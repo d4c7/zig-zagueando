@@ -69,16 +69,6 @@ Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilado
     </item>
     
     <item>
-      <title></title>
-      <link>https://d4c7.github.io/zig-zagueando/posts/145-zig-allocators/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://d4c7.github.io/zig-zagueando/posts/145-zig-allocators/</guid>
-      <description>https://uwspace.uwaterloo.ca/handle/10012/18329
-Los asignadores de memoria son un componente crítico de cualquier sistema que requiere la gestión dinámica de la memoria, como un sistema operativo o un tiempo de ejecución del lenguaje de programación. Su trabajo es gestionar la asignación y desasignación de bloques de memoria, de acuerdo a las solicitudes hechas por los programas o procesos que se ejecutan en el sistema. Aquí hay algunas estrategias que utilizan los asignadores de memoria:</description>
-    </item>
-    
-    <item>
       <title>Buscar</title>
       <link>https://d4c7.github.io/zig-zagueando/search/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
