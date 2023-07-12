@@ -6,7 +6,17 @@
     <description>Contenido reciente de Zig-zagueando Blog</description>
     <generator>Zig-Zagueando</generator>
     <language>es</language>
-    <lastBuildDate>Sun, 25 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagueando/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://d4c7.github.io/zig-zagueando/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Un analizador de línea de comandos en Zig 🔧 (Parte II)</title>
+      <link>https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-2/</link>
+      <pubDate>Sun, 09 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-2/</guid>
+      <description>¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.
+Diseñando la estructura de datos de los argumentos 📝 Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, &amp;ldquo;¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?</description>
+    </item>
+    
     <item>
       <title>Un analizador de línea de comandos en Zig 🔧 (Parte I)</title>
       <link>https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-1/</link>
@@ -64,7 +74,7 @@ Configurando Visual Studio Code para el desarrollo en Zig 🛠️ Para configura
       
       <guid>https://d4c7.github.io/zig-zagueando/posts/instalando-zig-en-linux-windows-y-macos/</guid>
       <description>¡Hola, entusiastas de Zig! 👋 En la publicación anteriores hemos visto que Zig mola mucho. Pero antes de sumergirnos en temas más avanzados, vamos a asegurarnos de tener Zig instalado y funcionando en nuestros sistemas. En esta publicación, te guiaré en la instalación de Zig en Linux, Windows y macOS. ¡Comencemos! 🚀
-Instalando Zig en Linux 🐧 ⚠️ ¡Atención, programador! Este post utiliza la versión dev 0.11.0 de Zig
+Instalando Zig en Linux 🐧 ⚠️ ¡Atención, programador! Este post utiliza la versión 0.11.0-dev.3971 de Zig
 Para usuarios de Linux, puedes instalar Zig utilizando los paquetes precompilados o construyéndolo desde el código fuente.</description>
     </item>
     

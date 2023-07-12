@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Un analizador de línea de comandos en Zig 🔧 (Parte II) | Zig-zagueando Blog</title>
+<meta name="keywords" content="Zig, Análisis de argumentos de la línea de comandos, zig-clap, Programación en Zig, Argumentos de la línea de comandos en Zig, zig-argueando, zig-args">
+<meta name="description" content="¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.
+Diseñando la estructura de datos de los argumentos 📝 Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, &ldquo;¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?">
+<meta name="author" content="d4c7">
+<link rel="canonical" href="https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-2/">
+<link crossorigin="anonymous" href="/zig-zagueando/assets/css/stylesheet.8e8af8c7897af6457d28b7ea77a4d4acf670934d081625a7b0ec0a87f8fcbfcf.css" integrity="sha256-jor4x4l69kV9KLfqd6TUrPZwk00IFiWnsOwKh/j8v88=" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/zig-zagueando/assets/js/highlight.9a8019f45628f095e5668671b3b0e124b8cf7dda465f36166dcc239c8748a257.js" integrity="sha256-moAZ9FYo8JXlZoZxs7DhJLjPfdpGXzYWbcwjnIdIolc="
+    onload="hljs.configure({ignoreUnescapedHTML:true});hljs.highlightAll();"></script>
+<link rel="icon" href="https://d4c7.github.io/zig-zagueando/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://d4c7.github.io/zig-zagueando/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://d4c7.github.io/zig-zagueando/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://d4c7.github.io/zig-zagueando/apple-touch-icon.png">
+<link rel="mask-icon" href="https://d4c7.github.io/zig-zagueando/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&family=Tajawal:wght@300&display=swap" rel="stylesheet">
+</noscript>
+
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@600&family=Tajawal:wght@300&display=swapp" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-59LR4NE7W9"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-59LR4NE7W9', { 'anonymize_ip': false });
+}
+</script>
+<meta property="og:title" content="Un analizador de línea de comandos en Zig 🔧 (Parte II)" />
+<meta property="og:description" content="¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.
+Diseñando la estructura de datos de los argumentos 📝 Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, &ldquo;¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-2/" />
+<meta property="og:image" content="https://d4c7.github.io/zig-zagueando/covers/un-analizador-de-linea-de-comandos-en-zig-2.webp" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-07-09T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-07-09T00:00:00+00:00" /><meta property="og:site_name" content="Programando con Zig" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://d4c7.github.io/zig-zagueando/covers/un-analizador-de-linea-de-comandos-en-zig-2.webp" />
+<meta name="twitter:title" content="Un analizador de línea de comandos en Zig 🔧 (Parte II)"/>
+<meta name="twitter:description" content="¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.
+Diseñando la estructura de datos de los argumentos 📝 Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, &ldquo;¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://d4c7.github.io/zig-zagueando/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Un analizador de línea de comandos en Zig 🔧 (Parte II)",
+      "item": "https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-2/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Un analizador de línea de comandos en Zig 🔧 (Parte II)",
+  "name": "Un analizador de línea de comandos en Zig 🔧 (Parte II)",
+  "description": "¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.\nDiseñando la estructura de datos de los argumentos 📝 Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, \u0026ldquo;¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?",
+  "keywords": [
+    "Zig", "Análisis de argumentos de la línea de comandos", "zig-clap", "Programación en Zig", "Argumentos de la línea de comandos en Zig", "zig-argueando", "zig-args"
+  ],
+  "articleBody": "¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.\nDiseñando la estructura de datos de los argumentos 📝 Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, “¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?” Créeme, he estado allí. Pero a través de los años he aprendido que las estructuras de datos son fundamentales por varias razones:\nEficiencia: Las estructuras de datos correctas pueden hacer una gran diferencia en la eficiencia de tu aplicación. A veces, la diferencia entre un algoritmo O(n^2) y uno O(n log n) es simplemente la elección de la estructura de datos adecuada. Una decisión temprana y consciente puede evitar muchos problemas de rendimiento en el futuro.\nOrganización: El diseño de las estructuras de datos afecta a la organización de tu código. Una buena estructura de datos puede facilitar la lectura y la comprensión del código, haciendo que sea más fácil de mantener y extender.\nAbstracción: Las estructuras de datos nos permiten abstraer detalles complicados y centrarnos en problemas de alto nivel. Por ejemplo, no necesitamos saber exactamente cómo funciona una tabla hash para beneficiarnos de su capacidad para buscar elementos en tiempo constante.\nModelado de datos: Las estructuras de datos son una forma de modelar la realidad en nuestros programas. Un buen modelo de datos puede facilitar la resolución de problemas y hacer que nuestro código sea más flexible y adaptable a los cambios.\nPor eso es importante dedicarle tiempo desde el principio. No es solo por el hecho de “hacerlo bien” desde el comienzo. Es también por las consecuencias a largo plazo que pueden surgir si no se toma en cuenta. Las estructuras de datos mal elegidas pueden resultar en código lento, difícil de entender y de mantener, e incluso incorrecto.\nEs cierto que el desarrollo de software, después de todo, es un proceso iterativo. Puedes comenzar con una estructura de datos inicial simple que cumpla con los requisitos básicos de tu aplicación. A medida que tu aplicación crece y evoluciona, podrías encontrarte en la necesidad de revisar y ajustar estas estructuras para acomodar nuevas características o mejorar el rendimiento.\nSin embargo, quiero añadir una nota de precaución aquí: este camino puede ser realmente arduo. Cambiar la estructura de datos fundamental de un programa en funcionamiento puede ser un proceso complicado y propenso a errores. Podrías tener que reescribir grandes partes de tu código y hacer un extenso trabajo de pruebas para asegurarte de que todo sigue funcionando como se espera.\nNo quiero desalentarte de hacer iteraciones sobre tus estructuras de datos, pero sí es importante tener en cuenta que un poco de tiempo invertido en la planificación inicial puede ahorrar mucho tiempo y dolores de cabeza más adelante. Es un equilibrio delicado, ¿verdad? Pero esa es parte de la belleza y el desafío de nuestra profesión.\nEn Zig, utilizaremos struct para definir nuestros modelos de datos. En nuestro modelo, vamos a representar parámetros que pueden ser de tipo option o positional. Los argumentos de tipo option pueden tener un nombre corto y otro largo.\n⚠️ ¡Atención, programador! Este post utiliza la versión 0.11.0-dev.3971 de Zig\nconst Param = struct { kind: Kind, tag: usize = 0, help: []const u8 = \"\", check: ?*const Checks.Fn = null, }; const Kind = union(KindTag) { option: Option, positional: Positional, }; const Option = struct { format: Format = .flag, short: []const u8 = \"\", long: []const u8 = \"\", }; pub const Positional = struct { format: Format, }; Ambos tipos de parámetros definen un formato format que puede ser flag, single o multi representado parámetros tipo flag, que sólo pueden aparecer una vez o múltiples veces respectivamente. El formato, si no es flag, especifica un parser para convertir el argumento en un tipo de datos concreto. Además los parámetros pueden establecer una función personalizada de validación y definir el texto que aparecerá en la ayuda.\nconst Format = union(FormatTag) { flag: void, single: Single, multi: Multi, }; pub const Single = struct { parser: []const u8 = \"STR\", default: ?[]const u8 = null, }; pub const Multi = struct { parser: []const u8 = \"STR\", defaults: ?[]const []const u8 = null, min: usize = 1, max: usize = 1, }; Un parser permite convertir y validar un argumento en texto a un tipo concreto en Zig. Para ello definimos dos punteros funciones, uno para realizar el parsing en sí y el otro para validar el valor obtenido. Además podremos definir el texto que aparecerá en la ayuda.\nTodos los elementos anteriores forman parte de la estructura principal CommandLineParser que incluye la lista de parsers y paramétros, así como los texto de ayuda que incluyen cabecera, pie y descripción; y por supuesto las opciones de procesado.\nImplementando la función de análisis de argumentos 💡 Con la estructura básica en su lugar, es hora de implementar la función del CommandLineParser que analizará los argumentos. Esta función tomará la lista de argumentos proporcionada por el usuario (normalmente a través de std.process.args()) y llenará la estructura de datos Args.\npub fn parseArgs(comptime self: CommandLineParser, allocator: std.mem.Allocator) Args(self) { var it = try std.process.ArgIterator.initWithAllocator(allocator); defer it.deinit(); return self.parse(\u0026it, allocator); } La función parseArgs recibe una lista de argumentos y procesa cada uno de ellos en orden. Si encuentra un argumento que no reconoce, o si se proporciona un valor para un argumento que no lo requiere, registra un problema. Si todo va bien, devuelve la estructura de datos Args llena con la información recopilada.\nLa estructura Args, que recibe el resultado del análisis de la línea de comandos, contiene:\nexe, que tiene el nombre del ejecutable args, que contiene una estructura con los nombres de las opciones y otro campo especial positionals con los argumentos posicionales problems, es una lista de problemas encontrados durante el análisis de los argumentos En este punto hay que hacer notar que todas las estructuras CommandLineParser, Args se han crean en tiempo de compilación. ¡Fantástico!\nUsando las estructuras 🛠 Zig-argueando propociona funciones con valores por defecto para inicializar las estructuras, de esta forma obtenemos muchas ventajas:\nPodemos mantener una interface más estable y simple al usuario. Podemos modificar estructuras internas sin que nuestros usuarios tengan que cambiar el código Es más sencillo inicializar las estructuras porque tienen valores predefinidos “válidos” Las estructuras no admiten campos que no sean relevantes para el objeto que se define Por ejemplo, para definir un parámetro que es un flag se proporciona la función flag, que admite una estructura que tiene preestablecidos sus campos:\npub const DefaultFlag = struct { short: []const u8 = \"\", long: []const u8 = \"\", help: []const u8 = \"\", }; pub fn flag(comptime opts: DefaultFlag) Param { return Param{ .kind = .{ .option = .{ .short = opts.short, .long = opts.long, .format = .flag, } }, .help = opts.help, }; } Es muy fácil ahora definir un parámetro tipo flag que tenga como nombre largo --verbose y corto -v, con su correspondiente texto de ayuda:\nflag(.{ .long = \"verbose\", .short = \"v\", .help = \"Enable verbose output.\" }), Así proporcionamos funciones para definir parámetros flag, flagHelp, option, multiOption, singlePositional y multiPositional, y quién sabe si alguno más en el futuro.\nEsto permite definir los analizadores de una manera muy intuitiva a nuestro usuarios. En muchas ocasiones, la simplicidad para los usuarios es nuestra complejidad:\nconst clp = comptime Argueando.CommandLineParser.init(.{ .header= \\\\ \\ | \\\\ _ \\ __| _` | | | _ \\ _` | __ \\ _` | _ \\ \\\\ ___ \\ | ( | | | __/ ( | | | ( | ( | \\\\_/ _\\ _| \\__, | \\__,_| \\___| \\__,_| _| _| \\__,_| \\___/ \\\\ |___/ ,.params = \u0026[_]Argueando.Param{ flagHelp(.{ .long = \"help\", .short = \"h\", .help = \"Shows this help.\" }), flag(.{ .long = \"version\", .help = \"Output version information and exit.\" }), flag(.{ .long = \"verbose\", .short = \"v\", .help = \"Enable verbose output.\" }), option(.{ .long = \"port\", .short = \"p\", .parser = \"TCP_PORT\", .default = \"1234\", .help = \"Listening Port.\" }), option(.{ .long = \"host\", .short = \"H\", .parser = \"TCP_HOST\", .default = \"localhost\", .help = \"Host name\" }), singlePositional(.{ .parser = \"DIR\", .default = \".\", .check = \u0026Check.Dir(.{ .mode = .read_only }).f }), }, // .desc = \"This command starts an HTTP Server and serves static content from directory DIR.\", // .footer = \"More info: .\", }); var s = clp.parseArgs(allocator); defer s.deinit(); if (s.helpRequested()) { try s.printHelp(std.io.getStdErr().writer()); return; } if (s.hasProblems()) { try s.printProblems(std.io.getStdErr().writer(), .AllProblems); return; } $ ./sample-argueando --help \\ | _ \\ __| _` | | | _ \\ _` | __ \\ _` | _ \\ ___ \\ | ( | | | __/ ( | | | ( | ( | _/ _\\ _| \\__, | \\__,_| \\___| \\__,_| _| _| \\__,_| \\___/ |___/ Usage: sample-argueando [(-h|--help)] [--version] [(-v|--verbose)] [(-p|--port)=TCP_PORT] [(-H|--host)=TCP_HOST] [DIR] This command starts an HTTP Server and serves static content from directory DIR. -h, --help Shows this help. --version Output version information and exit. -v, --verbose Enable verbose output. -p, --port=TCP_PORT Listening Port. Default value: 1234 -H, --host=TCP_HOST Host name Default value: localhost TCP_PORT TCP port value between 0 and 65535. Use port 0 to dynamically assign a port Can use base prefix (0x,0o,0b). TCP_HOST TCP host name or IP. DIR Directory More info: . Conclusiones de la Segunda Parte ✨ Hemos definido los modelos de datos de nuestra biblioteca zig-argueando. Puedes ver código en desarrollo de la librería en GitHub, que iremos mejorando, analizando y explicando poco a poco. ¡Hasta la próxima! 👋\n",
+  "wordCount" : "1632",
+  "inLanguage": "es",
+  "image":"https://d4c7.github.io/zig-zagueando/covers/un-analizador-de-linea-de-comandos-en-zig-2.webp","datePublished": "2023-07-09T00:00:00Z",
+  "dateModified": "2023-07-09T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "d4c7"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-2/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zig-zagueando Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://d4c7.github.io/zig-zagueando/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class=" dark" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://d4c7.github.io/zig-zagueando/" accesskey="h" title="Zig-zagueando Blog (Alt + H)">Zig-zagueando Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://d4c7.github.io/zig-zagueando/search/" title="Buscar">
+                    <span>Buscar</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://d4c7.github.io/zig-zagueando/">Inicio</a>&nbsp;»&nbsp;<a href="https://d4c7.github.io/zig-zagueando/posts/">Posts</a></div>
+    <h1 class="post-title">
+      Un analizador de línea de comandos en Zig 🔧 (Parte II)
+    </h1>
+    <div class="post-meta"><span title='2023-07-09 00:00:00 +0000 +0000'>julio 9, 2023</span>&nbsp;·&nbsp;8 min&nbsp;·&nbsp;1632 palabras&nbsp;·&nbsp;d4c7
+
+</div>
+  </header> 
+<figure class="entry-cover"><img loading="lazy" src="https://d4c7.github.io/zig-zagueando/covers/un-analizador-de-linea-de-comandos-en-zig-2.webp" alt="">
+        
+</figure><div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Tabla de Contenidos</span>
+        </summary>
+
+        <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#diseñando-la-estructura-de-datos-de-los-argumentos-">Diseñando la estructura de datos de los argumentos 📝</a></li>
+    <li><a href="#implementando-la-función-de-análisis-de-argumentos-">Implementando la función de análisis de argumentos 💡</a></li>
+    <li><a href="#usando-las-estructuras-">Usando las estructuras 🛠</a></li>
+    <li><a href="#conclusiones-de-la-segunda-parte-">Conclusiones de la Segunda Parte ✨</a></li>
+  </ul>
+</nav>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>¡Hola de nuevo! 🙌 Esperamos que estés emocionado por continuar con el desarrollo de nuestro analizador de argumentos de línea de comandos, zig-argueando. En esta segunda parte, nos enfocaremos en crear la estructura básica de nuestra biblioteca. Empecemos.</p>
+<h2 id="diseñando-la-estructura-de-datos-de-los-argumentos-">Diseñando la estructura de datos de los argumentos 📝<a hidden class="anchor" aria-hidden="true" href="#diseñando-la-estructura-de-datos-de-los-argumentos-">#</a></h2>
+<p>Necesitamos una estructura de datos que represente un argumento de línea de comandos y vamos a dedicarle un tiempo sustancial. Comprendo que puedes estar pensando, &ldquo;¿Por qué debería pasar tanto tiempo pensando en estructuras de datos cuando hay tanto código que escribir?&rdquo; Créeme, he estado allí. Pero a través de los años he aprendido que las estructuras de datos son fundamentales por varias razones:</p>
+<ol>
+<li>
+<p><strong>Eficiencia</strong>: Las estructuras de datos correctas pueden hacer una gran diferencia en la eficiencia de tu aplicación. A veces, la diferencia entre un algoritmo O(n^2) y uno O(n log n) es simplemente la elección de la estructura de datos adecuada. Una decisión temprana y consciente puede evitar muchos problemas de rendimiento en el futuro.</p>
+</li>
+<li>
+<p><strong>Organización</strong>: El diseño de las estructuras de datos afecta a la organización de tu código. Una buena estructura de datos puede facilitar la lectura y la comprensión del código, haciendo que sea más fácil de mantener y extender.</p>
+</li>
+<li>
+<p><strong>Abstracción</strong>: Las estructuras de datos nos permiten abstraer detalles complicados y centrarnos en problemas de alto nivel. Por ejemplo, no necesitamos saber exactamente cómo funciona una tabla hash para beneficiarnos de su capacidad para buscar elementos en tiempo constante.</p>
+</li>
+<li>
+<p><strong>Modelado de datos</strong>: Las estructuras de datos son una forma de modelar la realidad en nuestros programas. Un buen modelo de datos puede facilitar la resolución de problemas y hacer que nuestro código sea más flexible y adaptable a los cambios.</p>
+</li>
+</ol>
+<p>Por eso es importante dedicarle tiempo desde el principio. No es solo por el hecho de &ldquo;hacerlo bien&rdquo; desde el comienzo. Es también por las consecuencias a largo plazo que pueden surgir si no se toma en cuenta. Las estructuras de datos mal elegidas pueden resultar en código lento, difícil de entender y de mantener, e incluso incorrecto.</p>
+<p>Es cierto que el desarrollo de software, después de todo, es un proceso iterativo. Puedes comenzar con una estructura de datos inicial simple que cumpla con los requisitos básicos de tu aplicación. A medida que tu aplicación crece y evoluciona, podrías encontrarte en la necesidad de revisar y ajustar estas estructuras para acomodar nuevas características o mejorar el rendimiento.</p>
+<p>Sin embargo, quiero añadir una nota de precaución aquí: este camino puede ser realmente arduo. Cambiar la estructura de datos fundamental de un programa en funcionamiento puede ser un proceso complicado y propenso a errores. Podrías tener que reescribir grandes partes de tu código y hacer un extenso trabajo de pruebas para asegurarte de que todo sigue funcionando como se espera.</p>
+<p>No quiero desalentarte de hacer iteraciones sobre tus estructuras de datos, pero sí es importante tener en cuenta que un poco de tiempo invertido en la planificación inicial puede ahorrar mucho tiempo y dolores de cabeza más adelante. Es un equilibrio delicado, ¿verdad? Pero esa es parte de la belleza y el desafío de nuestra profesión.</p>
+<p>En Zig, utilizaremos <code>struct</code> para definir nuestros modelos de datos. En nuestro modelo, vamos a representar parámetros que pueden ser de tipo <code>option</code> o <code>positional</code>. Los argumentos de tipo <code>option</code> pueden tener un nombre corto y otro largo.</p>
+<p><img loading="lazy" src="diagrams-Param.png" alt="Modelo de datos Param"  />
+</p>
+<blockquote>
+<p>⚠️ <em>¡Atención, programador! Este post utiliza la versión 0.11.0-dev.3971 de Zig</em></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-zig" data-lang="zig"><span class="line"><span class="cl"><span class="kr">const</span><span class="w"> </span><span class="n">Param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">kind</span><span class="o">:</span><span class="w"> </span><span class="n">Kind</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">tag</span><span class="o">:</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">help</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">check</span><span class="o">:</span><span class="w"> </span><span class="o">?*</span><span class="kr">const</span><span class="w"> </span><span class="n">Checks</span><span class="p">.</span><span class="n">Fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kr">const</span><span class="w"> </span><span class="n">Kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">union</span><span class="p">(</span><span class="n">KindTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">option</span><span class="o">:</span><span class="w"> </span><span class="n">Option</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">positional</span><span class="o">:</span><span class="w"> </span><span class="n">Positional</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kr">const</span><span class="w"> </span><span class="n">Option</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">format</span><span class="o">:</span><span class="w"> </span><span class="n">Format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">flag</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">short</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">long</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kr">pub</span><span class="w"> </span><span class="kr">const</span><span class="w"> </span><span class="n">Positional</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">format</span><span class="o">:</span><span class="w"> </span><span class="n">Format</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span></code></pre></div><p>Ambos tipos de parámetros definen un formato <code>format</code> que puede ser <code>flag</code>, <code>single</code> o <code>multi</code> representado parámetros tipo flag, que sólo pueden aparecer una vez o múltiples veces respectivamente. El formato, si no es <code>flag</code>,  especifica un <code>parser</code> para convertir el argumento en un tipo de datos concreto. Además los parámetros pueden establecer una función personalizada de validación y definir el texto que aparecerá en la ayuda.</p>
+<p><img loading="lazy" src="diagrams-Format.png" alt="Modelo de datos Format"  />
+</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-zig" data-lang="zig"><span class="line"><span class="cl"><span class="kr">const</span><span class="w"> </span><span class="n">Format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">union</span><span class="p">(</span><span class="n">FormatTag</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">flag</span><span class="o">:</span><span class="w"> </span><span class="kt">void</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">single</span><span class="o">:</span><span class="w"> </span><span class="n">Single</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">multi</span><span class="o">:</span><span class="w"> </span><span class="n">Multi</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kr">pub</span><span class="w"> </span><span class="kr">const</span><span class="w"> </span><span class="n">Single</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">parser</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;STR&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">default</span><span class="o">:</span><span class="w"> </span><span class="o">?</span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kr">pub</span><span class="w"> </span><span class="kr">const</span><span class="w"> </span><span class="n">Multi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">parser</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;STR&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">defaults</span><span class="o">:</span><span class="w"> </span><span class="o">?</span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">min</span><span class="o">:</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">max</span><span class="o">:</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span></code></pre></div><p>Un <code>parser</code> permite convertir y validar un argumento en texto a un tipo concreto en Zig. Para ello definimos dos punteros funciones, uno para realizar el parsing en sí y el otro para validar el valor obtenido. Además podremos definir el texto que aparecerá en la ayuda.</p>
+<p><img loading="lazy" src="diagrams-Parser.png" alt="Modelo de datos Parser"  />
+</p>
+<p>Todos los elementos anteriores forman parte de la estructura principal <code>CommandLineParser</code> que incluye la lista de parsers y paramétros, así como los texto de ayuda que incluyen cabecera, pie y descripción; y por supuesto las opciones de procesado.</p>
+<p><img loading="lazy" src="diagrams-CommandLineParser.png" alt="Modelo de datos CommandLineParser"  />
+</p>
+<h2 id="implementando-la-función-de-análisis-de-argumentos-">Implementando la función de análisis de argumentos 💡<a hidden class="anchor" aria-hidden="true" href="#implementando-la-función-de-análisis-de-argumentos-">#</a></h2>
+<p>Con la estructura básica en su lugar, es hora de implementar la función del <code>CommandLineParser</code> que analizará los argumentos. Esta función tomará la lista de argumentos proporcionada por el usuario (normalmente a través de <code>std.process.args()</code>) y llenará la estructura de datos <code>Args</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-zig" data-lang="zig"><span class="line"><span class="cl"><span class="kr">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="n">parseArgs</span><span class="p">(</span><span class="kr">comptime</span><span class="w"> </span><span class="n">self</span><span class="o">:</span><span class="w"> </span><span class="n">CommandLineParser</span><span class="p">,</span><span class="w"> </span><span class="n">allocator</span><span class="o">:</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">mem</span><span class="p">.</span><span class="n">Allocator</span><span class="p">)</span><span class="w"> </span><span class="n">Args</span><span class="p">(</span><span class="n">self</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">try</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">process</span><span class="p">.</span><span class="n">ArgIterator</span><span class="p">.</span><span class="n">initWithAllocator</span><span class="p">(</span><span class="n">allocator</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="n">deinit</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">self</span><span class="p">.</span><span class="n">parse</span><span class="p">(</span><span class="o">&amp;</span><span class="n">it</span><span class="p">,</span><span class="w"> </span><span class="n">allocator</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>La función <code>parseArgs</code> recibe una lista de argumentos y procesa cada uno de ellos en orden. Si encuentra un argumento que no reconoce, o si se proporciona un valor para un argumento que no lo requiere, registra un problema. Si todo va bien, devuelve la estructura de datos <code>Args</code> llena con la información recopilada.</p>
+<p>La estructura <code>Args</code>, que recibe el resultado del análisis de la línea de comandos, contiene:</p>
+<ul>
+<li><code>exe</code>, que tiene el nombre del ejecutable</li>
+<li><code>args</code>, que contiene una estructura con los nombres de las opciones y otro campo especial <code>positionals</code> con los argumentos posicionales</li>
+<li><code>problems</code>, es una lista de problemas encontrados durante el análisis de los argumentos</li>
+</ul>
+<p><img loading="lazy" src="diagrams-Args.png" alt="Modelo de datos Args"  />
+</p>
+<p>En este punto hay que hacer notar que todas las estructuras <code>CommandLineParser</code>, <code>Args</code> se han crean en tiempo de compilación. ¡Fantástico!</p>
+<h2 id="usando-las-estructuras-">Usando las estructuras 🛠<a hidden class="anchor" aria-hidden="true" href="#usando-las-estructuras-">#</a></h2>
+<p>Zig-argueando propociona funciones con valores por defecto para inicializar las estructuras, de esta forma obtenemos muchas ventajas:</p>
+<ol>
+<li>Podemos mantener una interface más estable y simple al usuario.</li>
+<li>Podemos modificar estructuras internas sin que nuestros usuarios tengan que cambiar el código</li>
+<li>Es más sencillo inicializar las estructuras porque tienen valores predefinidos &ldquo;válidos&rdquo;</li>
+<li>Las estructuras no admiten campos que no sean relevantes para el objeto que se define</li>
+</ol>
+<p>Por ejemplo, para definir un parámetro que es un flag se proporciona la función <code>flag</code>, que admite una estructura que tiene preestablecidos sus campos:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-zig" data-lang="zig"><span class="line"><span class="cl"><span class="kr">pub</span><span class="w"> </span><span class="kr">const</span><span class="w"> </span><span class="n">DefaultFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">short</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">long</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">help</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span><span class="kr">const</span><span class="w"> </span><span class="kt">u8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kr">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="n">flag</span><span class="p">(</span><span class="kr">comptime</span><span class="w"> </span><span class="n">opts</span><span class="o">:</span><span class="w"> </span><span class="n">DefaultFlag</span><span class="p">)</span><span class="w"> </span><span class="n">Param</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Param</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.{</span><span class="w"> </span><span class="p">.</span><span class="n">option</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opts</span><span class="p">.</span><span class="n">short</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opts</span><span class="p">.</span><span class="n">long</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">flag</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opts</span><span class="p">.</span><span class="n">help</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Es muy fácil ahora definir un parámetro tipo <code>flag</code> que tenga como nombre largo <code>--verbose</code> y corto <code>-v</code>, con su correspondiente texto de ayuda:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-zig" data-lang="zig"><span class="line"><span class="cl"><span class="w"> </span><span class="n">flag</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;verbose&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;v&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Enable verbose output.&#34;</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span></code></pre></div><p>Así proporcionamos funciones para definir parámetros <code>flag</code>, <code>flagHelp</code>, <code>option</code>, <code>multiOption</code>, <code>singlePositional</code> y  <code>multiPositional</code>, y quién sabe si alguno más en el futuro.</p>
+<p>Esto permite definir los analizadores de una manera muy intuitiva a nuestro usuarios. En muchas ocasiones, la simplicidad para los usuarios es nuestra complejidad:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-zig" data-lang="zig"><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kr">const</span><span class="w"> </span><span class="n">clp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kr">comptime</span><span class="w"> </span><span class="n">Argueando</span><span class="p">.</span><span class="n">CommandLineParser</span><span class="p">.</span><span class="n">init</span><span class="p">(.{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">.</span><span class="n">header</span><span class="o">=</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="sh">\\    \                                                |        </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="sh">\\   _ \     __|  _` |  |   |   _ \   _` |  __ \    _` |   _ \  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="sh">\\  ___ \   |    (   |  |   |   __/  (   |  |   |  (   |  (   | </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="sh">\\_/    _\ _|   \__, | \__,_| \___| \__,_| _|  _| \__,_| \___/  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="sh">\\              |___/  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">,.</span><span class="n">params</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">_</span><span class="p">]</span><span class="n">Argueando</span><span class="p">.</span><span class="n">Param</span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">flagHelp</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;help&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;h&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Shows this help.&#34;</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">flag</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;version&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Output version information and exit.&#34;</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">flag</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;verbose&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;v&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Enable verbose output.&#34;</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">option</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;port&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;p&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;TCP_PORT&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;1234&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Listening Port.&#34;</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">option</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">long</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;host&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">short</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;H&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;TCP_HOST&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;localhost&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;Host name&#34;</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">singlePositional</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">parser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;DIR&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">default</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;.&#34;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">check</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">Check</span><span class="p">.</span><span class="n">Dir</span><span class="p">(.{</span><span class="w"> </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">read_only</span><span class="w"> </span><span class="p">}).</span><span class="n">f</span><span class="w"> </span><span class="p">}),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="p">.</span><span class="n">desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;This command starts an HTTP Server and serves static content from directory DIR.&#34;</span><span class="p">,</span><span class="w"> </span><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="p">.</span><span class="n">footer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;More info: &lt;https://d4c7.github.io/zig-zagueando/&gt;.&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kr">var</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clp</span><span class="p">.</span><span class="n">parseArgs</span><span class="p">(</span><span class="n">allocator</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">defer</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">deinit</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">helpRequested</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">printHelp</span><span class="p">(</span><span class="n">std</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">getStdErr</span><span class="p">().</span><span class="n">writer</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="n">hasProblems</span><span class="p">())</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">printProblems</span><span class="p">(</span><span class="n">std</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">getStdErr</span><span class="p">().</span><span class="n">writer</span><span class="p">(),</span><span class="w"> </span><span class="p">.</span><span class="n">AllProblems</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">$ ./sample-argueando --help
+</span></span><span class="line"><span class="cl">    \                                                |        
+</span></span><span class="line"><span class="cl">   _ \     __|  _` |  |   |   _ \   _` |  __ \    _` |   _ \  
+</span></span><span class="line"><span class="cl">  ___ \   |    (   |  |   |   __/  (   |  |   |  (   |  (   | 
+</span></span><span class="line"><span class="cl">_/    _\ _|   \__, | \__,_| \___| \__,_| _|  _| \__,_| \___/  
+</span></span><span class="line"><span class="cl">              |___/  
+</span></span><span class="line"><span class="cl">Usage: sample-argueando [(-h|--help)]
+</span></span><span class="line"><span class="cl">    [--version] [(-v|--verbose)] [(-p|--port)=TCP_PORT] [(-H|--host)=TCP_HOST]
+</span></span><span class="line"><span class="cl">    [DIR]
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">This command starts an HTTP Server and serves static content from directory DIR.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  -h, --help             Shows this help.
+</span></span><span class="line"><span class="cl">      --version          Output version information and exit.
+</span></span><span class="line"><span class="cl">  -v, --verbose          Enable verbose output.
+</span></span><span class="line"><span class="cl">  -p, --port=TCP_PORT    Listening Port.
+</span></span><span class="line"><span class="cl">                         Default value: 1234
+</span></span><span class="line"><span class="cl">  -H, --host=TCP_HOST    Host name
+</span></span><span class="line"><span class="cl">                         Default value: localhost
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  TCP_PORT    TCP port value between 0 and 65535. Use port 0 to dynamically assign a port
+</span></span><span class="line"><span class="cl">              Can use base prefix (0x,0o,0b). 
+</span></span><span class="line"><span class="cl">  TCP_HOST    TCP host name or IP. 
+</span></span><span class="line"><span class="cl">  DIR         Directory 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">More info: &lt;https://d4c7.github.io/zig-zagueando/&gt;.
+</span></span></code></pre></div><h2 id="conclusiones-de-la-segunda-parte-">Conclusiones de la Segunda Parte ✨<a hidden class="anchor" aria-hidden="true" href="#conclusiones-de-la-segunda-parte-">#</a></h2>
+<p>Hemos definido los modelos de datos de nuestra biblioteca zig-argueando. Puedes ver código en desarrollo de la librería en <a href="https://github.com/d4c7/zig-argueando">GitHub</a>, que iremos mejorando, analizando y explicando poco a poco. ¡Hasta la próxima! 👋</p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://d4c7.github.io/zig-zagueando/posts/un-analizador-de-linea-de-comandos-en-zig-1/">
+    <span class="title">Siguiente »</span>
+    <br>
+    <span>Un analizador de línea de comandos en Zig 🔧 (Parte I)</span>
+  </a>
+</nav>
+
+
+<div class="share-buttons">
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on twitter"
+        href="https://twitter.com/intent/tweet/?text=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f&amp;hashtags=">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-253.927,424.544c135.939,0 210.268,-112.643 210.268,-210.268c0,-3.218 0,-6.437 -0.153,-9.502c14.406,-10.421 26.973,-23.448 36.935,-38.314c-13.18,5.824 -27.433,9.809 -42.452,11.648c15.326,-9.196 26.973,-23.602 32.49,-40.92c-14.252,8.429 -30.038,14.56 -46.896,17.931c-13.487,-14.406 -32.644,-23.295 -53.946,-23.295c-40.767,0 -73.87,33.104 -73.87,73.87c0,5.824 0.613,11.494 1.992,16.858c-61.456,-3.065 -115.862,-32.49 -152.337,-77.241c-6.284,10.881 -9.962,23.601 -9.962,37.088c0,25.594 13.027,48.276 32.95,61.456c-12.107,-0.307 -23.448,-3.678 -33.41,-9.196l0,0.92c0,35.862 25.441,65.594 59.311,72.49c-6.13,1.686 -12.72,2.606 -19.464,2.606c-4.751,0 -9.348,-0.46 -13.946,-1.38c9.349,29.426 36.628,50.728 68.965,51.341c-25.287,19.771 -57.164,31.571 -91.8,31.571c-5.977,0 -11.801,-0.306 -17.625,-1.073c32.337,21.15 71.264,33.41 112.95,33.41Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on twitter"
+        href="https://mastodon.social/share?text=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f&amp;hashtags=">
+        <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 134.98711 134.98711"  height="30px" width="30px" fill="currentColor">
+            <path
+            id="path173"
+            style="stroke-width:0.263647"
+            d="m 16.731795,0.23977865 c -9.1024158,0 -16.49201635,7.38992375 -16.49201635,16.49201635 V 118.73487 c 0,9.10226 7.38985565,16.49202 16.49201635,16.49202 H 118.73487 c 9.10214,0 16.49202,-7.38976 16.49202,-16.49202 V 16.731795 c 0,-9.1020926 -7.38961,-16.49201635 -16.49202,-16.49201635 z M 67.439294,10.841715 c 14.33843,-0.05813 28.783417,1.646195 36.594666,5.294251 0,0 15.91014,7.255352 15.91014,31.968591 0,0 0.20549,18.227747 -2.23449,30.892688 -1.55702,8.036749 -13.76419,16.8293 -27.786933,18.533753 -5.022382,0.607318 -23.265943,3.605592 -44.66084,-1.706356 -0.0048,1.181997 0.06971,2.368525 0.222208,3.541903 1.656724,12.607705 12.293926,13.366905 22.390882,13.722155 10.191884,0.33227 18.422648,-2.56831 18.422648,-2.56831 l 0.42633,9.38289 c 0,0 -6.280354,3.89032 -18.978686,4.60798 -6.997135,0.4035 -15.701008,-0.18203 -25.82168,-2.90215 -26.42692,-7.14414 -26.405106,-44.08773 -26.405106,-73.505069 0,-24.71324 15.937528,-31.968075 15.937528,-31.968075 7.40775,-3.415535 21.644915,-5.240421 35.983333,-5.294251 z m 15.973702,18.845362 c -4.915817,0.118459 -9.781729,2.307054 -12.784232,6.975801 L 67.745219,41.57679 64.852372,36.662878 C 61.861733,32.020326 57.007083,29.816291 52.094495,29.690694 v -0.0016 c -4.9126,-0.131685 -9.884165,1.806349 -13.109794,5.442562 -5.881561,6.821562 -4.589384,11.286347 -4.589384,42.018624 h 11.644767 v -26.7208 c 0,-12.50759 15.938045,-12.98127 15.938045,1.74408 V 67.656852 H 73.521094 V 52.17356 c 0,-14.724632 15.947347,-14.241724 15.947347,-1.733228 v 26.72085 h 11.617379 v -0.0098 c 0,-30.708592 1.31591,-35.144851 -4.589384,-42.018624 -3.201876,-3.612175 -8.167622,-5.564121 -13.08344,-5.445662 z" />    
+       </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on linkedin"
+        href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f&amp;title=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29&amp;summary=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29&amp;source=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on reddit"
+        href="https://reddit.com/submit?url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f&title=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on facebook"
+        href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on whatsapp"
+        href="https://api.whatsapp.com/send?text=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29%20-%20https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f">
+        <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+        </svg>
+    </a>
+    <a target="_blank" rel="noopener noreferrer" aria-label="share Un analizador de línea de comandos en Zig 🔧 (Parte II) on telegram"
+        href="https://telegram.me/share/url?text=Un%20analizador%20de%20l%c3%adnea%20de%20comandos%20en%20Zig%20%f0%9f%94%a7%20%28Parte%20II%29&amp;url=https%3a%2f%2fd4c7.github.io%2fzig-zagueando%2fposts%2fun-analizador-de-linea-de-comandos-en-zig-2%2f">
+        <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+            <path
+                d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+        </svg>
+    </a>
+</div>
+  </footer>
+
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2023 <a href="https://d4c7.github.io/zig-zagueando/">Zig-zagueando Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copiar';
+
+        function copyingDone() {
+            copybutton.innerHTML = '¡copiado!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copiar';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
